@@ -2,6 +2,7 @@ package top.lemonsoda.openweather.view.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +29,7 @@ import top.lemonsoda.openweather.view.IWeatherView;
 /**
  * Created by chuanl on 7/19/16.
  */
-public class WeatherFragment extends BaseFragment implements IWeatherView {
+public class WeatherFragment extends BaseFragment implements IWeatherView, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = WeatherFragment.class.getCanonicalName();
 
     @BindView(R.id.tv_city_name)
@@ -39,6 +40,9 @@ public class WeatherFragment extends BaseFragment implements IWeatherView {
 
     @BindView(R.id.tv_desc)
     TextView tvDesc;
+
+    @BindView(R.id.srl_weather)
+    SwipeRefreshLayout srlWeather;
 
 //    @BindView(R.id.ll_forecast)
 //    LinearLayout llForecast;
@@ -79,6 +83,9 @@ public class WeatherFragment extends BaseFragment implements IWeatherView {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
 
+        tvCityName.setText(cityName);
+
+        srlWeather.setOnRefreshListener(this);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         rvForecast.setLayoutManager(llm);
         forecastAdapter = new ForecastAdapter();
@@ -103,27 +110,32 @@ public class WeatherFragment extends BaseFragment implements IWeatherView {
     @Override
     public void setWeatherInfo(Weather weather) {
         isDataInitiated = true;
-        Log.d(TAG, "setWeatherInfo");
-        Log.d(TAG, "Temp: " + weather.getCurrentWeather().getMain().getTemp());
-        Log.d(TAG, "Cnt: " + weather.getForecastWeather().getCnt());
-        Log.d(TAG, "Forecast: " + weather.getForecastWeather().getList().get(0).getDt_txt());
         weatherInfo = weather;
         showWeather();
-        forecastAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showLoading() {
         Log.d(TAG, "showLoading...");
+        if (!srlWeather.isRefreshing()) {
+            srlWeather.post(new Runnable() {
+                @Override
+                public void run() {
+                    srlWeather.setRefreshing(true);
+                }
+            });
+        }
     }
 
     @Override
     public void hideLoading() {
+        srlWeather.setRefreshing(false);
         Log.d(TAG, "hideLoading...");
     }
 
     @Override
     public void showError() {
+        srlWeather.setRefreshing(false);
         Toast.makeText(getActivity(), "Error...", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "showError...");
     }
@@ -131,9 +143,14 @@ public class WeatherFragment extends BaseFragment implements IWeatherView {
     private void showWeather() {
         CurrentWeather currentWeather = weatherInfo.getCurrentWeather();
         String temp = Utils.formatTemperature(getActivity(), currentWeather.getMain().getTemp());
-        tvCityName.setText(currentWeather.getName());
         tvTemp.setText(temp);
         tvDesc.setText(currentWeather.getWeather().get(0).getDescription());
+        forecastAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh() {
+        prepareFetchData(true);
     }
 
     class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -146,13 +163,19 @@ public class WeatherFragment extends BaseFragment implements IWeatherView {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ForecastViewHolder viewHolder = (ForecastViewHolder)holder;
+            ForecastViewHolder viewHolder = (ForecastViewHolder) holder;
 
             ForecastWeather forecastWeather = weatherInfo.getForecastWeather();
-//            double d_temp = forecastWeather.getList().get(position).getMain().getTemp();
-//            int weather_id = forecastWeather.getList().get(position).getWeather().get(0).getId();
-            viewHolder.tvTemp.setText(Utils.formatTemperature(getActivity(), 10));
-            viewHolder.imgIcon.setImageResource(Utils.getArtResourceForWeatherCondition(800));
+            int dt = forecastWeather.getList().get(position).getDt();
+            double d_temp = forecastWeather.getList().get(position).getTemp().getDay();
+            int weather_id = forecastWeather.getList().get(position).getWeather().get(0).getId();
+
+
+            if (position > 0) {
+                viewHolder.tvDate.setText(Utils.getMonthDay(dt));
+            }
+            viewHolder.tvTemp.setText(Utils.formatTemperature(getActivity(), d_temp));
+            viewHolder.imgIcon.setImageResource(Utils.getArtResourceForWeatherCondition(weather_id));
             ViewGroup.LayoutParams params = viewHolder.llContainer.getLayoutParams();
             params.width = Utils.getScreenWidth(getActivity()) / 4;
             viewHolder.llContainer.setLayoutParams(params);
@@ -161,11 +184,10 @@ public class WeatherFragment extends BaseFragment implements IWeatherView {
         @Override
         public int getItemCount() {
             if (weatherInfo == null)
-              return 0;
+                return 0;
             else {
                 return 4;
             }
-//            return 4;
         }
     }
 

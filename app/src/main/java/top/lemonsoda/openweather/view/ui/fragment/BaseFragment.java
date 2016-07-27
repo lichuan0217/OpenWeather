@@ -40,7 +40,6 @@ public abstract class BaseFragment extends Fragment {
     public boolean prepareFetchData(boolean forceUpdate) {
         if (isVisibleToUser && isViewInitiated && (!isDataInitiated || forceUpdate)) {
             fetchData();
-//            isDataInitiated = true;
             return true;
         }
         return false;

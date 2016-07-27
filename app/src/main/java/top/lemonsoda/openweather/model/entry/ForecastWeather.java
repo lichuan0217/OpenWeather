@@ -6,26 +6,26 @@ import java.util.List;
  * Created by chuanl on 7/19/16.
  */
 public class ForecastWeather {
-
     /**
+     * city : {"id":1816670,"name":"Beijing","coord":{"lon":116.397232,"lat":39.907501},"country":"CN","population":0}
+     * cod : 200
+     * message : 0.0113
      * cnt : 3
-     * list : [ {
-     *     "dt":1468832400,
-     *     "main": {
-     *         "temp":293.52,
-     *         "temp_min":293.519,
-     *         "temp_max":293.52,
-     *     },
-     *     "weather": [ {
-     *         "id":800,
-     *         "main":"Clear",
-     *         "description":"clear sky",
-     *         "icon":"01d" } ],
-     *     "dt_txt":"2016-07-18 09:00:00" }
-     *     ]
+     * list : [{"dt":1469160000,"temp":{"day":30.9,"min":27.05,"max":32.46,"night":27.05,"eve":32.1,"morn":30.9},"pressure":990.26,"humidity":85,"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"02d"}],"speed":1.76,"deg":192,"clouds":8},{"dt":1469246400,"temp":{"day":31.11,"min":25.56,"max":33.98,"night":27.15,"eve":33.61,"morn":25.56},"pressure":991.84,"humidity":91,"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10d"}],"speed":1.6,"deg":97,"clouds":32},{"dt":1469332800,"temp":{"day":31.14,"min":24.65,"max":33.44,"night":24.65,"eve":30.82,"morn":25.31},"pressure":995.22,"humidity":89,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],"speed":1.57,"deg":95,"clouds":44,"rain":11.15}]
      */
 
     private int cnt;
+    /**
+     * dt : 1469160000
+     * temp : {"day":30.9,"min":27.05,"max":32.46,"night":27.05,"eve":32.1,"morn":30.9}
+     * pressure : 990.26
+     * humidity : 85
+     * weather : [{"id":800,"main":"Clear","description":"clear sky","icon":"02d"}]
+     * speed : 1.76
+     * deg : 192
+     * clouds : 8
+     */
+
     private List<ListBean> list;
 
     public int getCnt() {
@@ -44,11 +44,30 @@ public class ForecastWeather {
         this.list = list;
     }
 
-
     public static class ListBean {
         private int dt;
-        private MainBean main;
-        private String dt_txt;
+        /**
+         * day : 30.9
+         * min : 27.05
+         * max : 32.46
+         * night : 27.05
+         * eve : 32.1
+         * morn : 30.9
+         */
+
+        private TempBean temp;
+        private double pressure;
+        private int humidity;
+        private double speed;
+        private int deg;
+        private int clouds;
+        /**
+         * id : 800
+         * main : Clear
+         * description : clear sky
+         * icon : 02d
+         */
+
         private List<WeatherBean> weather;
 
         public int getDt() {
@@ -59,20 +78,52 @@ public class ForecastWeather {
             this.dt = dt;
         }
 
-        public MainBean getMain() {
-            return main;
+        public TempBean getTemp() {
+            return temp;
         }
 
-        public void setMain(MainBean main) {
-            this.main = main;
+        public void setTemp(TempBean temp) {
+            this.temp = temp;
         }
 
-        public String getDt_txt() {
-            return dt_txt;
+        public double getPressure() {
+            return pressure;
         }
 
-        public void setDt_txt(String dt_txt) {
-            this.dt_txt = dt_txt;
+        public void setPressure(double pressure) {
+            this.pressure = pressure;
+        }
+
+        public int getHumidity() {
+            return humidity;
+        }
+
+        public void setHumidity(int humidity) {
+            this.humidity = humidity;
+        }
+
+        public double getSpeed() {
+            return speed;
+        }
+
+        public void setSpeed(double speed) {
+            this.speed = speed;
+        }
+
+        public int getDeg() {
+            return deg;
+        }
+
+        public void setDeg(int deg) {
+            this.deg = deg;
+        }
+
+        public int getClouds() {
+            return clouds;
+        }
+
+        public void setClouds(int clouds) {
+            this.clouds = clouds;
         }
 
         public List<WeatherBean> getWeather() {
@@ -83,33 +134,60 @@ public class ForecastWeather {
             this.weather = weather;
         }
 
-        public static class MainBean {
-            private double temp;
-            private double temp_min;
-            private double temp_max;
+        public static class TempBean {
+            private double day;
+            private double min;
+            private double max;
+            private double night;
+            private double eve;
+            private double morn;
 
-            public double getTemp() {
-                return temp;
+            public double getDay() {
+                return day;
             }
 
-            public void setTemp(double temp) {
-                this.temp = temp;
+            public void setDay(double day) {
+                this.day = day;
             }
 
-            public double getTemp_min() {
-                return temp_min;
+            public double getMin() {
+                return min;
             }
 
-            public void setTemp_min(double temp_min) {
-                this.temp_min = temp_min;
+            public void setMin(double min) {
+                this.min = min;
             }
 
-            public double getTemp_max() {
-                return temp_max;
+            public double getMax() {
+                return max;
             }
 
-            public void setTemp_max(double temp_max) {
-                this.temp_max = temp_max;
+            public void setMax(double max) {
+                this.max = max;
+            }
+
+            public double getNight() {
+                return night;
+            }
+
+            public void setNight(double night) {
+                this.night = night;
+            }
+
+            public double getEve() {
+                return eve;
+            }
+
+            public void setEve(double eve) {
+                this.eve = eve;
+            }
+
+            public double getMorn() {
+                return morn;
+            }
+
+            public void setMorn(double morn) {
+                this.morn = morn;
             }
         }
 
@@ -152,4 +230,5 @@ public class ForecastWeather {
             }
         }
     }
+
 }

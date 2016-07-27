@@ -1,35 +1,23 @@
 package top.lemonsoda.openweather.view.ui.activity;
 
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import top.lemonsoda.openweather.R;
-import top.lemonsoda.openweather.model.entry.Weather;
-import top.lemonsoda.openweather.presenter.IWeatherPresenter;
-import top.lemonsoda.openweather.presenter.impl.WeatherPresenterImpl;
-import top.lemonsoda.openweather.view.IWeatherView;
+import top.lemonsoda.openweather.domain.utils.CitySharedPreference;
+import top.lemonsoda.openweather.domain.utils.Constants;
 import top.lemonsoda.openweather.view.ui.fragment.WeatherFragment;
 
 public class WeatherActivity extends BaseActivity {
@@ -51,23 +39,37 @@ public class WeatherActivity extends BaseActivity {
         layoutResID = R.layout.activity_weather;
         super.onCreate(savedInstanceState);
 
-//        toolbar.getBackground().setAlpha(255);
-        cityList = new ArrayList<>();
+        if (CitySharedPreference.getCityList(this) == null) {
+            CitySharedPreference.addCity(this, "Beijing");
+        }
+        cityList = CitySharedPreference.getCityList(this);
 
-        cityList.add("Beijing");
-        cityList.add("Guangzhou");
-        cityList.add("Shijiazhuang");
-        cityList.add("London,uk");
-
-        initDot();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new DotChangerListener());
 
-        llDotGroup.getChildAt(0).setEnabled(true);
-        mViewPager.setCurrentItem(0);
+        setupViewPageWithDot(0);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult called..");
+        if (requestCode == Constants.REQUEST_ADD_CITY) {
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "result OK");
+                boolean dateChange = data.getBooleanExtra(Constants.ARG_CITY_MANAGE_CHANGED, false);
+                if (dateChange) {
+                    Log.d(TAG, "Data Changed ...");
+                    cityList = CitySharedPreference.getCityList(this);
+                    Log.d(TAG, "city list: " + cityList.toString());
+                    mSectionsPagerAdapter.notifyDataSetChanged();
+//                    setupViewPageWithDot(cityList.size() - 1);
+                    setupViewPageWithDot(0);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,16 +79,20 @@ public class WeatherActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(WeatherActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_city_manage) {
+            Intent intent = new Intent(WeatherActivity.this, CityManageActivity.class);
+            startActivityForResult(intent, Constants.REQUEST_ADD_CITY);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -107,22 +113,8 @@ public class WeatherActivity extends BaseActivity {
 
     }
 
-    private void initDot() {
-        View dot;
-        LinearLayout.LayoutParams params;
 
-        for (int i = 0; i < cityList.size(); ++i) {
-            dot = new View(this);
-            dot.setBackgroundResource(R.drawable.dot_bg_selector);
-            params = new LinearLayout.LayoutParams(20, 20);
-            params.leftMargin = 10;
-            dot.setEnabled(false);
-            dot.setLayoutParams(params);
-            llDotGroup.addView(dot);
-        }
-    }
-
-    private class DotChangerListener implements ViewPager.OnPageChangeListener {
+    public class DotChangerListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -141,5 +133,28 @@ public class WeatherActivity extends BaseActivity {
         public void onPageScrollStateChanged(int state) {
 
         }
+    }
+
+    private void initDot() {
+        View dot;
+        LinearLayout.LayoutParams params;
+
+        llDotGroup.removeAllViews();
+
+        for (int i = 0; i < cityList.size(); ++i) {
+            dot = new View(this);
+            dot.setBackgroundResource(R.drawable.dot_bg_selector);
+            params = new LinearLayout.LayoutParams(20, 20);
+            params.leftMargin = 10;
+            dot.setEnabled(false);
+            dot.setLayoutParams(params);
+            llDotGroup.addView(dot);
+        }
+    }
+
+    private void setupViewPageWithDot(int position) {
+        initDot();
+        llDotGroup.getChildAt(position).setEnabled(true);
+        mViewPager.setCurrentItem(position);
     }
 }

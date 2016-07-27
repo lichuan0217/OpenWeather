@@ -32,6 +32,6 @@ public class WeatherModelImpl implements IWeatherModel {
             }
         };
 
-        OpenWeatherMapManager.getInstance().getWeatherByName(weatherObserver, cityName, 3);
+        OpenWeatherMapManager.getInstance().getWeatherByName(weatherObserver, cityName, 4);
     }
 }

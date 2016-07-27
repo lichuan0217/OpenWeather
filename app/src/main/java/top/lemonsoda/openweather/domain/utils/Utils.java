@@ -6,6 +6,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import top.lemonsoda.openweather.R;
 
 /**
@@ -19,16 +24,14 @@ public class Utils {
 
     public static boolean isMetric(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//        return prefs.getString(context.getString(R.string.pref_units_key),
-//                context.getString(R.string.pref_units_metric))
-//                .equals(context.getString(R.string.pref_units_metric));
-        return true;
+        return prefs.getString(context.getString(R.string.pref_units_key),
+                context.getString(R.string.pref_units_metric))
+                .equals(context.getString(R.string.pref_units_metric));
     }
 
     public static String formatTemperature(Context context, double temperature) {
         // Data stored in Celsius by default.  If user prefers to see in Fahrenheit, convert
         // the values here.
-        String suffix = "\u00B0";
         if (!isMetric(context)) {
             temperature = (temperature * 1.8) + 32;
         }
@@ -62,6 +65,13 @@ public class Utils {
             return R.mipmap.art_clouds;
         }
         return -1;
+    }
+
+
+    public static String getMonthDay(int timestamp) {
+        Date date = new Date(timestamp * 1000l);
+        SimpleDateFormat format = new SimpleDateFormat("dd", Locale.ENGLISH);
+        return format.format(date);
     }
 
 
