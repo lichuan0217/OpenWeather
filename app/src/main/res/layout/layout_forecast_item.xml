@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:text="Now"
-        android:textColor="@color/white"
+        android:textColor="@color/primary_text"
         android:textSize="22sp" />
 
     <ImageView
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:text="21\u00B0"
-        android:textColor="@color/white"
+        android:textColor="@color/secondary_text"
         android:textSize="18sp" />
 
 </LinearLayout>

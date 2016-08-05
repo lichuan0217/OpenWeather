@@ -1,30 +1,16 @@
 package top.lemonsoda.openweather.model.entry;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by chuanl on 7/19/16.
  */
-public class ForecastWeather {
-    /**
-     * city : {"id":1816670,"name":"Beijing","coord":{"lon":116.397232,"lat":39.907501},"country":"CN","population":0}
-     * cod : 200
-     * message : 0.0113
-     * cnt : 3
-     * list : [{"dt":1469160000,"temp":{"day":30.9,"min":27.05,"max":32.46,"night":27.05,"eve":32.1,"morn":30.9},"pressure":990.26,"humidity":85,"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"02d"}],"speed":1.76,"deg":192,"clouds":8},{"dt":1469246400,"temp":{"day":31.11,"min":25.56,"max":33.98,"night":27.15,"eve":33.61,"morn":25.56},"pressure":991.84,"humidity":91,"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10d"}],"speed":1.6,"deg":97,"clouds":32},{"dt":1469332800,"temp":{"day":31.14,"min":24.65,"max":33.44,"night":24.65,"eve":30.82,"morn":25.31},"pressure":995.22,"humidity":89,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],"speed":1.57,"deg":95,"clouds":44,"rain":11.15}]
-     */
+public class ForecastWeather implements Parcelable {
 
     private int cnt;
-    /**
-     * dt : 1469160000
-     * temp : {"day":30.9,"min":27.05,"max":32.46,"night":27.05,"eve":32.1,"morn":30.9}
-     * pressure : 990.26
-     * humidity : 85
-     * weather : [{"id":800,"main":"Clear","description":"clear sky","icon":"02d"}]
-     * speed : 1.76
-     * deg : 192
-     * clouds : 8
-     */
 
     private List<ListBean> list;
 
@@ -44,31 +30,18 @@ public class ForecastWeather {
         this.list = list;
     }
 
-    public static class ListBean {
+    public static class ListBean implements Parcelable {
         private int dt;
-        /**
-         * day : 30.9
-         * min : 27.05
-         * max : 32.46
-         * night : 27.05
-         * eve : 32.1
-         * morn : 30.9
-         */
 
         private TempBean temp;
         private double pressure;
         private int humidity;
         private double speed;
-        private int deg;
+        private double deg;
         private int clouds;
-        /**
-         * id : 800
-         * main : Clear
-         * description : clear sky
-         * icon : 02d
-         */
-
         private List<WeatherBean> weather;
+
+
 
         public int getDt() {
             return dt;
@@ -110,11 +83,11 @@ public class ForecastWeather {
             this.speed = speed;
         }
 
-        public int getDeg() {
+        public double getDeg() {
             return deg;
         }
 
-        public void setDeg(int deg) {
+        public void setDeg(double deg) {
             this.deg = deg;
         }
 
@@ -134,7 +107,9 @@ public class ForecastWeather {
             this.weather = weather;
         }
 
-        public static class TempBean {
+
+
+        public static class TempBean implements Parcelable {
             private double day;
             private double min;
             private double max;
@@ -189,14 +164,89 @@ public class ForecastWeather {
             public void setMorn(double morn) {
                 this.morn = morn;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeDouble(this.day);
+                dest.writeDouble(this.min);
+                dest.writeDouble(this.max);
+                dest.writeDouble(this.night);
+                dest.writeDouble(this.eve);
+                dest.writeDouble(this.morn);
+            }
+
+            public TempBean() {
+            }
+
+            protected TempBean(Parcel in) {
+                this.day = in.readDouble();
+                this.min = in.readDouble();
+                this.max = in.readDouble();
+                this.night = in.readDouble();
+                this.eve = in.readDouble();
+                this.morn = in.readDouble();
+            }
+
+            public static final Parcelable.Creator<TempBean> CREATOR = new Parcelable.Creator<TempBean>() {
+                @Override
+                public TempBean createFromParcel(Parcel source) {
+                    return new TempBean(source);
+                }
+
+                @Override
+                public TempBean[] newArray(int size) {
+                    return new TempBean[size];
+                }
+            };
         }
 
-        public static class WeatherBean {
+        public static class WeatherBean implements Parcelable {
             private int id;
             private String main;
             private String description;
             private String icon;
 
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.id);
+                dest.writeString(this.main);
+                dest.writeString(this.description);
+                dest.writeString(this.icon);
+            }
+
+            public WeatherBean() {
+            }
+
+            protected WeatherBean(Parcel in) {
+                this.id = in.readInt();
+                this.main = in.readString();
+                this.description = in.readString();
+                this.icon = in.readString();
+            }
+
+            public static final Parcelable.Creator<WeatherBean> CREATOR = new Parcelable.Creator<WeatherBean>() {
+                @Override
+                public WeatherBean createFromParcel(Parcel source) {
+                    return new WeatherBean(source);
+                }
+
+                @Override
+                public WeatherBean[] newArray(int size) {
+                    return new WeatherBean[size];
+                }
+            };
+
+            // getter ans setter
             public int getId() {
                 return id;
             }
@@ -229,6 +279,80 @@ public class ForecastWeather {
                 this.icon = icon;
             }
         }
+
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.dt);
+            dest.writeParcelable(this.temp, flags);
+            dest.writeDouble(this.pressure);
+            dest.writeInt(this.humidity);
+            dest.writeDouble(this.speed);
+            dest.writeDouble(this.deg);
+            dest.writeInt(this.clouds);
+            dest.writeTypedList(this.weather);
+        }
+
+        public ListBean() {
+        }
+
+        protected ListBean(Parcel in) {
+            this.dt = in.readInt();
+            this.temp = in.readParcelable(TempBean.class.getClassLoader());
+            this.pressure = in.readDouble();
+            this.humidity = in.readInt();
+            this.speed = in.readDouble();
+            this.deg = in.readDouble();
+            this.clouds = in.readInt();
+            this.weather = in.createTypedArrayList(WeatherBean.CREATOR);
+        }
+
+        public static final Parcelable.Creator<ListBean> CREATOR = new Parcelable.Creator<ListBean>() {
+            @Override
+            public ListBean createFromParcel(Parcel source) {
+                return new ListBean(source);
+            }
+
+            @Override
+            public ListBean[] newArray(int size) {
+                return new ListBean[size];
+            }
+        };
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.cnt);
+        dest.writeTypedList(this.list);
+    }
+
+    public ForecastWeather() {
+    }
+
+    protected ForecastWeather(Parcel in) {
+        this.cnt = in.readInt();
+        this.list = in.createTypedArrayList(ListBean.CREATOR);
+    }
+
+    public static final Parcelable.Creator<ForecastWeather> CREATOR = new Parcelable.Creator<ForecastWeather>() {
+        @Override
+        public ForecastWeather createFromParcel(Parcel source) {
+            return new ForecastWeather(source);
+        }
+
+        @Override
+        public ForecastWeather[] newArray(int size) {
+            return new ForecastWeather[size];
+        }
+    };
 }

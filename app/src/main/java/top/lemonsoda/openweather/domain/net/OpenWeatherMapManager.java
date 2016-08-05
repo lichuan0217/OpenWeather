@@ -71,11 +71,12 @@ public class OpenWeatherMapManager {
 
     public void getWeatherByName(Observer<Weather> observer, String cityName, int cnt) {
         Observable.zip(
-                weatherService.getCurrentWeatherByName(cityName, UNITS_METRIC),
                 weatherService.getForecastWeatherByName(cityName, UNITS_METRIC, cnt),
-                new Func2<CurrentWeather, ForecastWeather, Weather>() {
+                weatherService.getCurrentWeatherByName(cityName, UNITS_METRIC),
+
+                new Func2<ForecastWeather, CurrentWeather, Weather>() {
                     @Override
-                    public Weather call(CurrentWeather currentWeather, ForecastWeather forecastWeather) {
+                    public Weather call(ForecastWeather forecastWeather, CurrentWeather currentWeather) {
                         Weather weather = new Weather();
                         weather.setCurrentWeather(currentWeather);
                         weather.setForecastWeather(forecastWeather);

@@ -21,7 +21,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/AppTheme.TextInputLayout">
 
                 <AutoCompleteTextView
                     android:id="@+id/actv_search"
@@ -30,7 +31,7 @@
                     android:singleLine="true"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:hint="@string/hint_search"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/primary_text"/>
 
             </android.support.design.widget.TextInputLayout>
         </android.support.v7.widget.Toolbar>

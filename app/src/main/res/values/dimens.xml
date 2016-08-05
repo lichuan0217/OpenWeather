@@ -7,4 +7,9 @@
 
     <dimen name="text_margin">8dp</dimen>
     <dimen name="text_margin_small">4dp</dimen>
+
+    <dimen name="detail_icon">96dp</dimen>
+    <dimen name="forecast_detail_horizontal_padding">32dp</dimen>
+    <dimen name="detail_view_padding_vertical">@dimen/abc_list_item_padding_horizontal_material</dimen>
+
 </resources>

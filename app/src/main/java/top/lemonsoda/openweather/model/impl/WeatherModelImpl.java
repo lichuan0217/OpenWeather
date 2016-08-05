@@ -23,6 +23,7 @@ public class WeatherModelImpl implements IWeatherModel {
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 listener.onError();
             }
 

@@ -2,9 +2,9 @@ package top.lemonsoda.openweather.view.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -12,19 +12,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import top.lemonsoda.openweather.R;
 import top.lemonsoda.openweather.domain.utils.CitySharedPreference;
 import top.lemonsoda.openweather.domain.utils.Constants;
+import top.lemonsoda.openweather.model.entry.ForecastWeather;
+import top.lemonsoda.openweather.model.entry.Weather;
 import top.lemonsoda.openweather.view.ui.fragment.WeatherFragment;
+import top.lemonsoda.openweather.view.ui.helper.WeatherPagerAdapter;
 
-public class WeatherActivity extends BaseActivity {
+public class WeatherActivity extends BaseActivity implements WeatherFragment.OnForecastItemClickListener {
     private static final String TAG = WeatherActivity.class.getCanonicalName();
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private WeatherPagerAdapter weatherPagerAdapter;
     private List<String> cityList;
+    private HashMap<String, Weather> weatherMap;
 
     private int dotPre = 0;
 
@@ -38,14 +45,19 @@ public class WeatherActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         layoutResID = R.layout.activity_weather;
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (CitySharedPreference.getCityList(this) == null) {
             CitySharedPreference.addCity(this, "Beijing");
         }
         cityList = CitySharedPreference.getCityList(this);
+        weatherMap = new HashMap<>();
+        for (String city : cityList) {
+            weatherMap.put(city, null);
+        }
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        weatherPagerAdapter = new WeatherPagerAdapter(getSupportFragmentManager(), cityList);
+        mViewPager.setAdapter(weatherPagerAdapter);
         mViewPager.addOnPageChangeListener(new DotChangerListener());
 
         setupViewPageWithDot(0);
@@ -57,13 +69,16 @@ public class WeatherActivity extends BaseActivity {
         if (requestCode == Constants.REQUEST_ADD_CITY) {
             if (resultCode == RESULT_OK) {
                 Log.d(TAG, "result OK");
-                boolean dateChange = data.getBooleanExtra(Constants.ARG_CITY_MANAGE_CHANGED, false);
-                if (dateChange) {
+                boolean dataChange = data.getBooleanExtra(Constants.ARG_CITY_MANAGE_CHANGED, false);
+                int dataChangeId = data.getIntExtra(Constants.ARG_CITY_MANAGE_CHANGE_ID, 0);
+                if (dataChange) {
                     Log.d(TAG, "Data Changed ...");
                     cityList = CitySharedPreference.getCityList(this);
                     Log.d(TAG, "city list: " + cityList.toString());
-                    mSectionsPagerAdapter.notifyDataSetChanged();
-//                    setupViewPageWithDot(cityList.size() - 1);
+                    updateWeatherMap();
+                    weatherPagerAdapter.updateCityList(cityList);
+                    weatherPagerAdapter.notifyChangeInPosition(dataChangeId);
+                    weatherPagerAdapter.notifyDataSetChanged();
                     setupViewPageWithDot(0);
                 }
             }
@@ -94,25 +109,46 @@ public class WeatherActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onItemClick(WeatherFragment.ForecastViewHolder holder, int pos, Weather weather) {
+        Log.d(TAG, "Pos: " + pos);
+        Intent intent = new Intent(WeatherActivity.this, DetailActivity.class);
+        ForecastWeather forecastWeather = weather.getForecastWeather();
+        intent.putExtra(Constants.ARG_DETAIL_KEY, forecastWeather);
+        intent.putExtra(Constants.ARG_DETAIL_DAY, pos);
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return WeatherFragment.newInstance(cityList.get(position));
-        }
-
-        @Override
-        public int getCount() {
-            return cityList.size();
-        }
-
-
+        ActivityOptionsCompat activityOptions =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        new Pair<View, String>(holder.imgIcon, getString(R.string.detail_icon_transition_name)));
+        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
     }
 
+    public void updateWeatherMap() {
+        for (String city : cityList) {
+            if (!weatherMap.containsKey(city)) {
+                weatherMap.put(city, null);
+            }
+        }
+        Iterator it = weatherMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            String key = entry.getKey().toString();
+            if (!cityList.contains(key)) {
+                it.remove();
+            }
+        }
+
+        Log.d(TAG, "update--cityList: " + cityList);
+        Log.d(TAG, "update--weatherMap: " + weatherMap.toString());
+    }
+
+    public void addWeather(String key, Weather weather) {
+        weatherMap.put(key, weather);
+    }
+
+    public Weather getWeather(String key) {
+        return weatherMap.get(key);
+    }
 
     public class DotChangerListener implements ViewPager.OnPageChangeListener {
 

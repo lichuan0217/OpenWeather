@@ -1,70 +1,23 @@
 package top.lemonsoda.openweather.model.entry;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by chuanl on 7/19/16.
  */
-public class CurrentWeather {
-
-    /**
-     * lon : -0.13
-     * lat : 51.51
-     */
-
-    private CoordBean coord;
-    /**
-     * temp : 289.61
-     * pressure : 1020
-     * humidity : 82
-     * temp_min : 287.04
-     * temp_max : 292.15
-     */
+public class CurrentWeather implements Parcelable {
 
     private MainBean main;
-    /**
-     * speed : 2.6
-     * deg : 100
-     */
-
     private WindBean wind;
-    /**
-     * all : 0
-     */
-
     private CloudsBean clouds;
-    /**
-     * coord : {"lon":-0.13,"lat":51.51}
-     * weather : [{"id":800,"main":"Clear","description":"clear sky","icon":"01n"}]
-     * base : cmc stations
-     * main : {"temp":289.61,"pressure":1020,"humidity":82,"temp_min":287.04,"temp_max":292.15}
-     * wind : {"speed":2.6,"deg":100}
-     * clouds : {"all":0}
-     * dt : 1468892582
-     * sys : {"type":1,"id":5091,"message":0.0039,"country":"GB","sunrise":1468901186,"sunset":1468958788}
-     * id : 2643743
-     * name : London
-     * cod : 200
-     */
-
     private int dt;
     private String name;
-    /**
-     * id : 800
-     * main : Clear
-     * description : clear sky
-     * icon : 01n
-     */
-
     private List<WeatherBean> weather;
 
-    public CoordBean getCoord() {
-        return coord;
-    }
 
-    public void setCoord(CoordBean coord) {
-        this.coord = coord;
-    }
 
     public MainBean getMain() {
         return main;
@@ -114,30 +67,11 @@ public class CurrentWeather {
         this.weather = weather;
     }
 
-    public static class CoordBean {
-        private double lon;
-        private double lat;
 
-        public double getLon() {
-            return lon;
-        }
 
-        public void setLon(double lon) {
-            this.lon = lon;
-        }
-
-        public double getLat() {
-            return lat;
-        }
-
-        public void setLat(double lat) {
-            this.lat = lat;
-        }
-    }
-
-    public static class MainBean {
+    public static class MainBean implements Parcelable {
         private double temp;
-        private int pressure;
+        private double pressure;
         private int humidity;
         private double temp_min;
         private double temp_max;
@@ -150,11 +84,11 @@ public class CurrentWeather {
             this.temp = temp;
         }
 
-        public int getPressure() {
+        public double getPressure() {
             return pressure;
         }
 
-        public void setPressure(int pressure) {
+        public void setPressure(double pressure) {
             this.pressure = pressure;
         }
 
@@ -181,11 +115,48 @@ public class CurrentWeather {
         public void setTemp_max(double temp_max) {
             this.temp_max = temp_max;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeDouble(this.temp);
+            dest.writeDouble(this.pressure);
+            dest.writeInt(this.humidity);
+            dest.writeDouble(this.temp_min);
+            dest.writeDouble(this.temp_max);
+        }
+
+        public MainBean() {
+        }
+
+        protected MainBean(Parcel in) {
+            this.temp = in.readDouble();
+            this.pressure = in.readDouble();
+            this.humidity = in.readInt();
+            this.temp_min = in.readDouble();
+            this.temp_max = in.readDouble();
+        }
+
+        public static final Parcelable.Creator<MainBean> CREATOR = new Parcelable.Creator<MainBean>() {
+            @Override
+            public MainBean createFromParcel(Parcel source) {
+                return new MainBean(source);
+            }
+
+            @Override
+            public MainBean[] newArray(int size) {
+                return new MainBean[size];
+            }
+        };
     }
 
-    public static class WindBean {
+    public static class WindBean implements Parcelable {
         private double speed;
-        private int deg;
+        private double deg;
 
         public double getSpeed() {
             return speed;
@@ -195,16 +166,47 @@ public class CurrentWeather {
             this.speed = speed;
         }
 
-        public int getDeg() {
+        public double getDeg() {
             return deg;
         }
 
-        public void setDeg(int deg) {
+        public void setDeg(double deg) {
             this.deg = deg;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeDouble(this.speed);
+            dest.writeDouble(this.deg);
+        }
+
+        public WindBean() {
+        }
+
+        protected WindBean(Parcel in) {
+            this.speed = in.readDouble();
+            this.deg = in.readDouble();
+        }
+
+        public static final Parcelable.Creator<WindBean> CREATOR = new Parcelable.Creator<WindBean>() {
+            @Override
+            public WindBean createFromParcel(Parcel source) {
+                return new WindBean(source);
+            }
+
+            @Override
+            public WindBean[] newArray(int size) {
+                return new WindBean[size];
+            }
+        };
     }
 
-    public static class CloudsBean {
+    public static class CloudsBean implements Parcelable {
         private int all;
 
         public int getAll() {
@@ -214,9 +216,38 @@ public class CurrentWeather {
         public void setAll(int all) {
             this.all = all;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.all);
+        }
+
+        public CloudsBean() {
+        }
+
+        protected CloudsBean(Parcel in) {
+            this.all = in.readInt();
+        }
+
+        public static final Parcelable.Creator<CloudsBean> CREATOR = new Parcelable.Creator<CloudsBean>() {
+            @Override
+            public CloudsBean createFromParcel(Parcel source) {
+                return new CloudsBean(source);
+            }
+
+            @Override
+            public CloudsBean[] newArray(int size) {
+                return new CloudsBean[size];
+            }
+        };
     }
 
-    public static class WeatherBean {
+    public static class WeatherBean implements Parcelable {
         private int id;
         private String main;
         private String description;
@@ -253,5 +284,79 @@ public class CurrentWeather {
         public void setIcon(String icon) {
             this.icon = icon;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
+            dest.writeString(this.main);
+            dest.writeString(this.description);
+            dest.writeString(this.icon);
+        }
+
+        public WeatherBean() {
+        }
+
+        protected WeatherBean(Parcel in) {
+            this.id = in.readInt();
+            this.main = in.readString();
+            this.description = in.readString();
+            this.icon = in.readString();
+        }
+
+        public static final Parcelable.Creator<WeatherBean> CREATOR = new Parcelable.Creator<WeatherBean>() {
+            @Override
+            public WeatherBean createFromParcel(Parcel source) {
+                return new WeatherBean(source);
+            }
+
+            @Override
+            public WeatherBean[] newArray(int size) {
+                return new WeatherBean[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.main, flags);
+        dest.writeParcelable(this.wind, flags);
+        dest.writeParcelable(this.clouds, flags);
+        dest.writeInt(this.dt);
+        dest.writeString(this.name);
+        dest.writeTypedList(this.weather);
+    }
+
+    public CurrentWeather() {
+    }
+
+    protected CurrentWeather(Parcel in) {
+        this.main = in.readParcelable(MainBean.class.getClassLoader());
+        this.wind = in.readParcelable(WindBean.class.getClassLoader());
+        this.clouds = in.readParcelable(CloudsBean.class.getClassLoader());
+        this.dt = in.readInt();
+        this.name = in.readString();
+        this.weather = in.createTypedArrayList(WeatherBean.CREATOR);
+    }
+
+    public static final Parcelable.Creator<CurrentWeather> CREATOR = new Parcelable.Creator<CurrentWeather>() {
+        @Override
+        public CurrentWeather createFromParcel(Parcel source) {
+            return new CurrentWeather(source);
+        }
+
+        @Override
+        public CurrentWeather[] newArray(int size) {
+            return new CurrentWeather[size];
+        }
+    };
 }

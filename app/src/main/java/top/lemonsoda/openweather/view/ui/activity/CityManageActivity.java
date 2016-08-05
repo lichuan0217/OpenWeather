@@ -48,7 +48,8 @@ public class CityManageActivity extends BaseActivity {
     private List<String> cityList;
     private CityListAdapter cityListAdapter;
 
-    private boolean dateChanged = false;
+    private boolean dataChanged = false;
+    private int dataChangeId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class CityManageActivity extends BaseActivity {
                     CitySharedPreference.addCity(CityManageActivity.this, city);
                     cityList.add(city);
                     cityListAdapter.notifyDataSetChanged();
-                    dateChanged = true;
+                    dataChanged = true;
                 }
                 actvSearch.setText("");
             }
@@ -102,7 +103,8 @@ public class CityManageActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(CityManageActivity.this, WeatherActivity.class);
-        intent.putExtra(Constants.ARG_CITY_MANAGE_CHANGED, dateChanged);
+        intent.putExtra(Constants.ARG_CITY_MANAGE_CHANGED, dataChanged);
+        intent.putExtra(Constants.ARG_CITY_MANAGE_CHANGE_ID, dataChangeId);
         setResult(RESULT_OK, intent);
         Log.d(TAG, "onBackPressed");
         super.onBackPressed();
@@ -128,7 +130,7 @@ public class CityManageActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            CityItemViewHolder viewHolder = (CityItemViewHolder)holder;
+            CityItemViewHolder viewHolder = (CityItemViewHolder) holder;
             viewHolder.tvCityName.setText(this.cityList.get(position));
         }
 
@@ -150,7 +152,7 @@ public class CityManageActivity extends BaseActivity {
             }
             notifyItemMoved(fromPosition, toPosition);
             CitySharedPreference.saveCityList(CityManageActivity.this, cityList);
-            dateChanged = true;
+            dataChanged = true;
         }
 
         @Override
@@ -158,7 +160,8 @@ public class CityManageActivity extends BaseActivity {
             this.cityList.remove(position);
             notifyItemRemoved(position);
             CitySharedPreference.saveCityList(CityManageActivity.this, cityList);
-            dateChanged = true;
+            dataChanged = true;
+            dataChangeId = position;
         }
     }
 

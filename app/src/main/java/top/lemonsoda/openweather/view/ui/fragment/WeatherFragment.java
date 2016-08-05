@@ -1,5 +1,6 @@
 package top.lemonsoda.openweather.view.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import top.lemonsoda.openweather.R;
 import top.lemonsoda.openweather.domain.utils.Constants;
 import top.lemonsoda.openweather.domain.utils.Utils;
@@ -25,11 +27,14 @@ import top.lemonsoda.openweather.model.entry.Weather;
 import top.lemonsoda.openweather.presenter.IWeatherPresenter;
 import top.lemonsoda.openweather.presenter.impl.WeatherPresenterImpl;
 import top.lemonsoda.openweather.view.IWeatherView;
+import top.lemonsoda.openweather.view.ui.activity.WeatherActivity;
 
 /**
  * Created by chuanl on 7/19/16.
  */
-public class WeatherFragment extends BaseFragment implements IWeatherView, SwipeRefreshLayout.OnRefreshListener {
+public class WeatherFragment extends BaseFragment
+        implements IWeatherView, SwipeRefreshLayout.OnRefreshListener {
+
     private static final String TAG = WeatherFragment.class.getCanonicalName();
 
     @BindView(R.id.tv_city_name)
@@ -44,24 +49,25 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
     @BindView(R.id.srl_weather)
     SwipeRefreshLayout srlWeather;
 
-//    @BindView(R.id.ll_forecast)
-//    LinearLayout llForecast;
-
     @BindView(R.id.rv_forecast)
     RecyclerView rvForecast;
 
     private IWeatherPresenter weatherPresenter;
-    private String cityName;
+    public String cityName;
+    private String cityNameKey;
+    private int index;
     private Weather weatherInfo = null;
     private ForecastAdapter forecastAdapter;
+    private OnForecastItemClickListener forecastItemClickListener;
 
     public WeatherFragment() {
     }
 
-    public static WeatherFragment newInstance(String cityName) {
+    public static WeatherFragment newInstance(String cityName, int pos) {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
         args.putString(Constants.ARG_CITY_NAME, cityName);
+        args.putInt(Constants.ARG_CITY_INDEX, pos);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,14 +78,17 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
         weatherPresenter = new WeatherPresenterImpl(this);
         if (getArguments() != null) {
             cityName = getArguments().getString(Constants.ARG_CITY_NAME, "Beijing");
+            cityNameKey = cityName;
+            index = getArguments().getInt(Constants.ARG_CITY_INDEX, -1);
         }
+        Log.d(TAG, cityName + " onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        Log.d(TAG, cityName + " onCreateView");
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
 
@@ -91,14 +100,29 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
         forecastAdapter = new ForecastAdapter();
         rvForecast.setAdapter(forecastAdapter);
 
+        weatherInfo = ((WeatherActivity) getActivity()).getWeather(cityNameKey);
+        if (weatherInfo != null) {
+            isDataInitiated = true;
+            showWeather();
+        }
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (isDataInitiated && weatherInfo != null) {
-            showWeather();
+        Log.d(TAG, cityName + " onResume");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnForecastItemClickListener) {
+            forecastItemClickListener = (OnForecastItemClickListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -111,6 +135,7 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
     public void setWeatherInfo(Weather weather) {
         isDataInitiated = true;
         weatherInfo = weather;
+        ((WeatherActivity) getActivity()).addWeather(cityNameKey, weather);
         showWeather();
     }
 
@@ -143,8 +168,9 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
     private void showWeather() {
         CurrentWeather currentWeather = weatherInfo.getCurrentWeather();
         String temp = Utils.formatTemperature(getActivity(), currentWeather.getMain().getTemp());
+        tvCityName.setText(currentWeather.getName());
         tvTemp.setText(temp);
-        tvDesc.setText(currentWeather.getWeather().get(0).getDescription());
+        tvDesc.setText(currentWeather.getWeather().get(0).getMain());
         forecastAdapter.notifyDataSetChanged();
     }
 
@@ -191,7 +217,7 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
         }
     }
 
-    class ForecastViewHolder extends RecyclerView.ViewHolder {
+    public class ForecastViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_item_date)
         TextView tvDate;
@@ -200,16 +226,28 @@ public class WeatherFragment extends BaseFragment implements IWeatherView, Swipe
         TextView tvTemp;
 
         @BindView(R.id.img_item_icon)
-        ImageView imgIcon;
+        public ImageView imgIcon;
 
         @BindView(R.id.ll_item_container)
         LinearLayout llContainer;
 
+        @OnClick(R.id.ll_item_container)
+        void onClick() {
+            if (weatherInfo == null) {
+                return;
+            }
+            forecastItemClickListener.onItemClick(
+                    this, getLayoutPosition(), weatherInfo);
+        }
 
         public ForecastViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface OnForecastItemClickListener {
+        void onItemClick(ForecastViewHolder holder, int pos, Weather weather);
     }
 
 }
