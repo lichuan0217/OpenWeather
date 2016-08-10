@@ -15,10 +15,12 @@ import top.lemonsoda.openweather.view.ui.fragment.WeatherFragment;
 public class WeatherPagerAdapter extends FragmentPagerAdapter {
     private List<String> cityList;
     private long baseId = 0;
+    private long countPre = 0;
 
     public WeatherPagerAdapter(FragmentManager fm, List<String> cities) {
         super(fm);
         this.cityList = cities;
+        countPre = cityList.size();
     }
 
     @Override
@@ -33,6 +35,8 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
     public void updateCityList(List<String> cityList) {
         this.cityList = cityList;
+        baseId += getCount() + countPre;
+        countPre = cityList.size();
     }
 
 

@@ -30,12 +30,11 @@ public class OpenWeatherMapManager {
 
     private OpenWeatherMapManager() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         // add logging as last interceptor
-        httpClient.addInterceptor(logging);  // <-- this is the important line!
+        httpClient.addInterceptor(logging);
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

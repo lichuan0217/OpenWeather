@@ -70,14 +70,12 @@ public class WeatherActivity extends BaseActivity implements WeatherFragment.OnF
             if (resultCode == RESULT_OK) {
                 Log.d(TAG, "result OK");
                 boolean dataChange = data.getBooleanExtra(Constants.ARG_CITY_MANAGE_CHANGED, false);
-                int dataChangeId = data.getIntExtra(Constants.ARG_CITY_MANAGE_CHANGE_ID, 0);
                 if (dataChange) {
                     Log.d(TAG, "Data Changed ...");
                     cityList = CitySharedPreference.getCityList(this);
                     Log.d(TAG, "city list: " + cityList.toString());
                     updateWeatherMap();
                     weatherPagerAdapter.updateCityList(cityList);
-                    weatherPagerAdapter.notifyChangeInPosition(dataChangeId);
                     weatherPagerAdapter.notifyDataSetChanged();
                     setupViewPageWithDot(0);
                 }

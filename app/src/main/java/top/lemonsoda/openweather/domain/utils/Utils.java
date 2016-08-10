@@ -31,8 +31,6 @@ public class Utils {
     }
 
     public static String formatTemperature(Context context, double temperature) {
-        // Data stored in Celsius by default.  If user prefers to see in Fahrenheit, convert
-        // the values here.
         if (!isMetric(context)) {
             temperature = (temperature * 1.8) + 32;
         }
@@ -107,9 +105,6 @@ public class Utils {
             windSpeed = .621371192237334f * windSpeed;
         }
 
-        // From wind direction in degrees, determine compass direction as a string (e.g NW)
-        // You know what's fun, writing really long if/else statements with tons of possible
-        // conditions.  Seriously, try it!
         String direction = "Unknown";
         if (degrees >= 337.5 || degrees < 22.5) {
             direction = "N";
