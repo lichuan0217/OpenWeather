@@ -77,7 +77,7 @@ public class DetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setDetailInfo(){
+    private void setDetailInfo() {
         ForecastWeather.ListBean bean = forecastWeather.getList().get(index);
         tvDetailDate.setText(Utils.getFormatDayString(bean.getDt()));
         tvDetailForecast.setText(bean.getWeather().get(0).getMain());
@@ -85,7 +85,7 @@ public class DetailActivity extends BaseActivity {
         tvDetailLow.setText(Utils.formatTemperature(this, bean.getTemp().getMin()));
         tvDetailHumidity.setText(getString(R.string.format_humidity, bean.getHumidity()));
         tvDetailPressure.setText(getString(R.string.format_pressure, bean.getPressure()));
-        tvDetailWind.setText(Utils.getFormattedWind(this, (float)bean.getSpeed(), (float)bean.getDeg()));
+        tvDetailWind.setText(Utils.getFormattedWind(this, (float) bean.getSpeed(), (float) bean.getDeg()));
         int weatherId = bean.getWeather().get(0).getId();
         imgDetailIcon.setImageResource(Utils.getArtResourceForWeatherCondition(weatherId));
     }

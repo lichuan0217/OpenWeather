@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,11 +42,16 @@ public class WeatherActivity extends BaseActivity implements WeatherFragment.OnF
     @BindView(R.id.ll_dot_group)
     LinearLayout llDotGroup;
 
+    TextView tvTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResID = R.layout.activity_weather;
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        tvTitle = (TextView)toolbar.findViewById(R.id.tv_toolbar_title);
+
 
         if (CitySharedPreference.getCityList(this) == null) {
             CitySharedPreference.addCity(this, "Beijing");
@@ -55,6 +61,7 @@ public class WeatherActivity extends BaseActivity implements WeatherFragment.OnF
         for (String city : cityList) {
             weatherMap.put(city, null);
         }
+        tvTitle.setText(cityList.get(0));
 
         weatherPagerAdapter = new WeatherPagerAdapter(getSupportFragmentManager(), cityList);
         mViewPager.setAdapter(weatherPagerAdapter);
@@ -161,6 +168,7 @@ public class WeatherActivity extends BaseActivity implements WeatherFragment.OnF
             llDotGroup.getChildAt(dotPre).setEnabled(false);
             llDotGroup.getChildAt(position).setEnabled(true);
             dotPre = position;
+            tvTitle.setText(cityList.get(position));
         }
 
         @Override

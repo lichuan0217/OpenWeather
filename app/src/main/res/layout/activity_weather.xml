@@ -11,7 +11,18 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"/>
+        android:layout_height="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:textColor="@color/primary_text"
+            android:text="Title" />
+
+    </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,37 +49,16 @@
 
 </LinearLayout>
 
-<!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/main_content"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:fitsSystemWindows="true"-->
-    <!--tools:context=".view.ui.activity.WeatherActivity">-->
+    <!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/main_content"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:fitsSystemWindows="true"--><!--tools:context=".view.ui.activity.WeatherActivity">-->
 
     <!--<include layout="@layout/content_toolbar" />-->
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+    <!--<RelativeLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-        <!--<android.support.v4.view.ViewPager-->
-            <!--android:id="@+id/container"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent" />-->
+    <!--<android.support.v4.view.ViewPager--><!--android:id="@+id/container"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent" />-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/ll_dot_group"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_marginBottom="200dp"-->
-            <!--android:gravity="right"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:padding="20dp" />-->
+    <!--<LinearLayout--><!--android:id="@+id/ll_dot_group"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_alignParentBottom="true"--><!--android:layout_marginBottom="200dp"--><!--android:gravity="right"--><!--android:orientation="horizontal"--><!--android:padding="20dp" />-->
 
     <!--</RelativeLayout>-->
 
-<!--</android.support.design.widget.CoordinatorLayout>-->
+    <!--</android.support.design.widget.CoordinatorLayout>-->

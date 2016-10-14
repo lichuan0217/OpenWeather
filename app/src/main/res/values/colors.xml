@@ -3,6 +3,9 @@
     <color name="colorPrimaryDark">#0288D1</color>
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorAccent">#448AFF</color>
+    <color name="bg_light">#FAFAFA</color>
+    <color name="bg_splash">#F7F7F7</color>
+    <color name="bg_splash_status">#AA607D8B</color>
 
     <color name="grey">#607D8B</color>
     <color name="grey_dark">#37474F</color>
@@ -16,4 +19,5 @@
 
     <color name="detail_accent_label">#90A4AE</color>
     <color name="detail_accent_pane_background">#455A64</color>
+    <color name="black_trans80">#14000000</color>
 </resources>

@@ -37,14 +37,23 @@ public class WeatherFragment extends BaseFragment
 
     private static final String TAG = WeatherFragment.class.getCanonicalName();
 
-    @BindView(R.id.tv_city_name)
-    TextView tvCityName;
+//    @BindView(R.id.tv_city_name)
+//    TextView tvCityName;
 
     @BindView(R.id.tv_temp)
     TextView tvTemp;
 
-    @BindView(R.id.tv_desc)
-    TextView tvDesc;
+//    @BindView(R.id.tv_desc)
+//    TextView tvDesc;
+
+    @BindView(R.id.tv_weather_rain)
+    TextView tvWeatherRain;
+
+    @BindView(R.id.tv_weather_wind)
+    TextView tvWeatherWind;
+
+    @BindView(R.id.img_weather_icon)
+    ImageView imgWeatherIcon;
 
     @BindView(R.id.srl_weather)
     SwipeRefreshLayout srlWeather;
@@ -92,7 +101,7 @@ public class WeatherFragment extends BaseFragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
 
-        tvCityName.setText(cityName);
+//        tvCityName.setText(cityName);
 
         srlWeather.setOnRefreshListener(this);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -168,9 +177,17 @@ public class WeatherFragment extends BaseFragment
     private void showWeather() {
         CurrentWeather currentWeather = weatherInfo.getCurrentWeather();
         String temp = Utils.formatTemperature(getActivity(), currentWeather.getMain().getTemp());
-        tvCityName.setText(currentWeather.getName());
+//        tvCityName.setText(currentWeather.getName());
         tvTemp.setText(temp);
-        tvDesc.setText(currentWeather.getWeather().get(0).getMain());
+//        tvDesc.setText(currentWeather.getWeather().get(0).getMain());
+        tvWeatherRain.setText(getString(R.string.format_humidity, currentWeather.getMain().getHumidity()));
+        tvWeatherWind.setText(
+                Utils.getFormattedWind(
+                        getActivity(),
+                        (float) currentWeather.getWind().getSpeed(),
+                        (float) currentWeather.getWind().getDeg()));
+        int weatherId = currentWeather.getWeather().get(0).getId();
+        imgWeatherIcon.setImageResource(Utils.getArtResourceForWeatherCondition(weatherId));
         forecastAdapter.notifyDataSetChanged();
     }
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:background="@color/colorPrimary"
+    android:elevation="4dp"
+    android:paddingLeft="10dp"
+    tools:context="top.lemonsoda.openweather.view.ui.fragment.WeatherFragment"
+    tools:showIn="@layout/fragment_weather">
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:fontFamily="sans-serif-thin"
+        android:text="clear"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/primary_text" />
+
+    <TextView
+        android:id="@+id/tv_city_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_desc"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/text_margin"
+        android:fontFamily="sans-serif"
+        android:text="Beijing, China"
+        android:textColor="@color/primary_text"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_city_name"
+        android:layout_margin="@dimen/text_margin"
+        android:fontFamily="sans-serif-light"
+        android:text="17\u00B0"
+        android:textColor="@color/secondary_text"
+        android:textSize="72sp" />
+
+
+</RelativeLayout>
