@@ -20,4 +20,7 @@
     <color name="detail_accent_label">#90A4AE</color>
     <color name="detail_accent_pane_background">#455A64</color>
     <color name="black_trans80">#14000000</color>
+
+    <color name="bg_weather_clear">#EF5350</color>
+    <color name="bg_weather_clear_dark">#C62828</color>
 </resources>

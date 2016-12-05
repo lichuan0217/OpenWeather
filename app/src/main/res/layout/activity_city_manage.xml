@@ -28,7 +28,7 @@
                     android:id="@+id/actv_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
+                    android:maxLines="1"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:hint="@string/hint_search"
                     android:textColor="@color/primary_text"/>

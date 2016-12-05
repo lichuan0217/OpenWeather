@@ -16,8 +16,15 @@ public class CurrentWeather implements Parcelable {
     private int dt;
     private String name;
     private List<WeatherBean> weather;
+    private int id;
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public MainBean getMain() {
         return main;
@@ -66,7 +73,6 @@ public class CurrentWeather implements Parcelable {
     public void setWeather(List<WeatherBean> weather) {
         this.weather = weather;
     }
-
 
 
     public static class MainBean implements Parcelable {
@@ -334,6 +340,7 @@ public class CurrentWeather implements Parcelable {
         dest.writeInt(this.dt);
         dest.writeString(this.name);
         dest.writeTypedList(this.weather);
+        dest.writeInt(this.id);
     }
 
     public CurrentWeather() {
@@ -346,6 +353,7 @@ public class CurrentWeather implements Parcelable {
         this.dt = in.readInt();
         this.name = in.readString();
         this.weather = in.createTypedArrayList(WeatherBean.CREATOR);
+        this.id = in.readInt();
     }
 
     public static final Parcelable.Creator<CurrentWeather> CREATOR = new Parcelable.Creator<CurrentWeather>() {

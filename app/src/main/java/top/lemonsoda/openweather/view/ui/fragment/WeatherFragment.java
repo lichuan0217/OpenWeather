@@ -20,7 +20,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import top.lemonsoda.openweather.R;
 import top.lemonsoda.openweather.domain.utils.Constants;
+import top.lemonsoda.openweather.domain.utils.NotificationUtils;
 import top.lemonsoda.openweather.domain.utils.Utils;
+import top.lemonsoda.openweather.domain.utils.WeatherSharedPreference;
+import top.lemonsoda.openweather.model.entry.City;
 import top.lemonsoda.openweather.model.entry.CurrentWeather;
 import top.lemonsoda.openweather.model.entry.ForecastWeather;
 import top.lemonsoda.openweather.model.entry.Weather;
@@ -37,14 +40,11 @@ public class WeatherFragment extends BaseFragment
 
     private static final String TAG = WeatherFragment.class.getCanonicalName();
 
-//    @BindView(R.id.tv_city_name)
-//    TextView tvCityName;
+    @BindView(R.id.ll_weather_container)
+    LinearLayout llWeatherContainer;
 
     @BindView(R.id.tv_temp)
     TextView tvTemp;
-
-//    @BindView(R.id.tv_desc)
-//    TextView tvDesc;
 
     @BindView(R.id.tv_weather_rain)
     TextView tvWeatherRain;
@@ -55,6 +55,9 @@ public class WeatherFragment extends BaseFragment
     @BindView(R.id.img_weather_icon)
     ImageView imgWeatherIcon;
 
+    @BindView(R.id.tv_last_update)
+    TextView tvLastUpdate;
+
     @BindView(R.id.srl_weather)
     SwipeRefreshLayout srlWeather;
 
@@ -62,8 +65,7 @@ public class WeatherFragment extends BaseFragment
     RecyclerView rvForecast;
 
     private IWeatherPresenter weatherPresenter;
-    public String cityName;
-    private String cityNameKey;
+    private City city;
     private int index;
     private Weather weatherInfo = null;
     private ForecastAdapter forecastAdapter;
@@ -81,27 +83,33 @@ public class WeatherFragment extends BaseFragment
         return fragment;
     }
 
+    public static WeatherFragment newInstance(City city, int pos) {
+        WeatherFragment fragment = new WeatherFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.ARG_CITY, city);
+        args.putInt(Constants.ARG_CITY_INDEX, pos);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         weatherPresenter = new WeatherPresenterImpl(this);
         if (getArguments() != null) {
-            cityName = getArguments().getString(Constants.ARG_CITY_NAME, "Beijing");
-            cityNameKey = cityName;
+            city = getArguments().getParcelable(Constants.ARG_CITY);
             index = getArguments().getInt(Constants.ARG_CITY_INDEX, -1);
         }
-        Log.d(TAG, cityName + " onCreate");
+        Log.d(TAG, "OnCreate: " + city);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, cityName + " onCreateView");
+        Log.d(TAG, "OnCreateView: " + city);
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
-
-//        tvCityName.setText(cityName);
 
         srlWeather.setOnRefreshListener(this);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -109,19 +117,27 @@ public class WeatherFragment extends BaseFragment
         forecastAdapter = new ForecastAdapter();
         rvForecast.setAdapter(forecastAdapter);
 
-        weatherInfo = ((WeatherActivity) getActivity()).getWeather(cityNameKey);
-        if (weatherInfo != null) {
-            isDataInitiated = true;
-            showWeather();
-        }
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, cityName + " onResume");
+        Log.d(TAG, "OnResume: " + city);
+
+        weatherInfo = ((WeatherActivity) getActivity()).getWeatherInfo(city);
+        if (weatherInfo == null) {
+            weatherInfo = WeatherSharedPreference.getWeatherInfo(getActivity(), city.get_id());
+            if (weatherInfo != null) {
+                Log.d(TAG, "Load weather from sharedPreference");
+                Log.d(TAG, "WeatherSharedPreference: " + weatherInfo.getCurrentWeather().getName()
+                        + ", " + weatherInfo.getCurrentWeather().getMain().getTemp());
+                showWeather();
+            }
+        } else {
+            isDataInitiated = true;
+            showWeather();
+        }
     }
 
     @Override
@@ -137,15 +153,19 @@ public class WeatherFragment extends BaseFragment
 
     @Override
     public void fetchData() {
-        weatherPresenter.getWeather(cityName);
+        weatherPresenter.getWeatherById(city.get_id());
     }
 
     @Override
     public void setWeatherInfo(Weather weather) {
         isDataInitiated = true;
         weatherInfo = weather;
-        ((WeatherActivity) getActivity()).addWeather(cityNameKey, weather);
+        WeatherSharedPreference.saveWeatherInfo(getActivity(), weather);
+        ((WeatherActivity) getActivity()).addWeatherInfo(city, weather);
         showWeather();
+        if (NotificationUtils.getInstance().getCityId() == city.get_id()) {
+            NotificationUtils.getInstance().updateNotification(getActivity(), city.get_id());
+        }
     }
 
     @Override
@@ -170,16 +190,15 @@ public class WeatherFragment extends BaseFragment
     @Override
     public void showError() {
         srlWeather.setRefreshing(false);
-        Toast.makeText(getActivity(), "Error...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "showError...");
     }
 
     private void showWeather() {
+        Log.d(TAG, "ShowWeather: " + city);
         CurrentWeather currentWeather = weatherInfo.getCurrentWeather();
         String temp = Utils.formatTemperature(getActivity(), currentWeather.getMain().getTemp());
-//        tvCityName.setText(currentWeather.getName());
         tvTemp.setText(temp);
-//        tvDesc.setText(currentWeather.getWeather().get(0).getMain());
         tvWeatherRain.setText(getString(R.string.format_humidity, currentWeather.getMain().getHumidity()));
         tvWeatherWind.setText(
                 Utils.getFormattedWind(
@@ -188,6 +207,7 @@ public class WeatherFragment extends BaseFragment
                         (float) currentWeather.getWind().getDeg()));
         int weatherId = currentWeather.getWeather().get(0).getId();
         imgWeatherIcon.setImageResource(Utils.getArtResourceForWeatherCondition(weatherId));
+        tvLastUpdate.setText(Utils.getFormatLastUpdate(getActivity(), weatherInfo.getUpdate()));
         forecastAdapter.notifyDataSetChanged();
     }
 
@@ -213,10 +233,7 @@ public class WeatherFragment extends BaseFragment
             double d_temp = forecastWeather.getList().get(position).getTemp().getDay();
             int weather_id = forecastWeather.getList().get(position).getWeather().get(0).getId();
 
-
-            if (position > 0) {
-                viewHolder.tvDate.setText(Utils.getMonthDay(dt));
-            }
+            viewHolder.tvDate.setText(Utils.getMonthDay(getActivity(), dt));
             viewHolder.tvTemp.setText(Utils.formatTemperature(getActivity(), d_temp));
             viewHolder.imgIcon.setImageResource(Utils.getArtResourceForWeatherCondition(weather_id));
             ViewGroup.LayoutParams params = viewHolder.llContainer.getLayoutParams();

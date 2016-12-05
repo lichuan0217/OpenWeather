@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,8 +20,22 @@ import top.lemonsoda.openweather.R;
  */
 public class Utils {
 
-    public static int getBackgoundColorForWeatherCondition(int weatherId) {
-        return 0;
+
+    public static String getStatusbarCity(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(context.getString(R.string.pref_notification_choose_city_key), null);
+    }
+
+    public static void setStatusbarCity(Context context, String id) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(context.getString(R.string.pref_notification_choose_city_key), id);
+        editor.commit();
+    }
+
+    public static boolean isAutoLocationEnable(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(context.getString(R.string.pref_auto_location_key), false);
     }
 
     public static boolean isMetric(Context context) {
@@ -37,6 +52,26 @@ public class Utils {
 
         // For presentation, assume the user doesn't care about tenths of a degree.
         return String.format(context.getString(R.string.format_temperature), temperature);
+    }
+
+    public static boolean isShowNotification(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean(context.getString(R.string.pref_show_notification_key), true);
+    }
+
+    public static int getNotificationCityId(Context context, int id) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String t = prefs.getString(context.getString(R.string.pref_notification_choose_city_key), String.valueOf(id));
+        return Integer.parseInt(t);
+    }
+
+    public static void updateNotificationLocation(Context context, int id) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString(context.getString(R.string.pref_notification_choose_city_key),
+                String.valueOf(id));
+        editor.commit();
     }
 
     public static int getArtResourceForWeatherCondition(int weatherId) {
@@ -67,11 +102,79 @@ public class Utils {
     }
 
 
-    public static String getMonthDay(int timestamp) {
-        Date date = new Date(timestamp * 1000l);
-        SimpleDateFormat format = new SimpleDateFormat("dd", Locale.ENGLISH);
-        return format.format(date);
+    public static int getResourceForWeatherCondition(int weatherId) {
+        if (weatherId >= 200 && weatherId <= 232) {
+            return R.mipmap.ic_storm;
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return R.mipmap.ic_light_rain;
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return R.mipmap.ic_rain;
+        } else if (weatherId == 511) {
+            return R.mipmap.ic_snow;
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return R.mipmap.ic_rain;
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return R.mipmap.ic_snow;
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return R.mipmap.ic_fog;
+        } else if (weatherId == 761 || weatherId == 781) {
+            return R.mipmap.ic_storm;
+        } else if (weatherId == 800) {
+            return R.mipmap.ic_clear;
+        } else if (weatherId == 801) {
+            return R.mipmap.ic_light_clouds;
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return R.mipmap.ic_cloudy;
+        }
+        return R.mipmap.ic_weather_rain;
     }
+
+    public static String getFormatLastUpdate(Context context, String date) {
+        long minDiff = 30;
+        String formatLastUpdate;
+        Calendar now = new GregorianCalendar();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleSdf = new SimpleDateFormat("MM-dd HH:mm");
+        SimpleDateFormat todaySdf = new SimpleDateFormat("HH:mm");
+        Calendar update = new GregorianCalendar();
+        try {
+            update.setTime(sdf.parse(date));
+            minDiff = now.getTimeInMillis() - update.getTimeInMillis();
+            minDiff = minDiff / (60 * 1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (minDiff < 1) {
+            formatLastUpdate = String.format(context.getString(R.string.format_last_update_just_now));
+        } else if (minDiff < 30) {
+            formatLastUpdate = String.format(context.getString(R.string.format_last_update_in_half), minDiff);
+        } else if (minDiff < 24 * 60) {
+            formatLastUpdate = String.format(context.getString(R.string.format_last_update), todaySdf.format(update.getTime()));
+        } else {
+            formatLastUpdate = String.format(context.getString(R.string.format_last_update), simpleSdf.format(update.getTime()));
+        }
+        return formatLastUpdate;
+    }
+
+    public static String getCurrentDate() {
+        Calendar calendar = new GregorianCalendar();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(calendar.getTime());
+    }
+
+
+    public static String getMonthDay(Context context, int timestamp) {
+        SimpleDateFormat format = new SimpleDateFormat("dd", Locale.ENGLISH);
+
+        Date today = new Date(System.currentTimeMillis());
+        String todayMonthDay = format.format(today);
+
+        Date date = new Date(timestamp * 1000l);
+        String monthDay = format.format(date);
+
+        return todayMonthDay.equals(monthDay) ? context.getString(R.string.info_now) : monthDay;
+    }
+
 
     public static String getFormatDayString(int timestamp) {
         Date date = new Date(timestamp * 1000l);
@@ -79,7 +182,7 @@ public class Utils {
         return format.format(date);
     }
 
-    public static String getFriendlyCurrentDayString(Context context){
+    public static String getFriendlyCurrentDayString(Context context) {
 
         Calendar cal = new GregorianCalendar();
 
@@ -89,10 +192,7 @@ public class Utils {
         SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd", Locale.ENGLISH);
         String monthDayString = monthDayFormat.format(cal.getTime());
 
-        return String.format(context.getString(
-                formatId,
-                today,
-                monthDayString));
+        return String.format(context.getString(formatId), today, monthDayString);
     }
 
 
@@ -137,5 +237,16 @@ public class Utils {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return displaymetrics.heightPixels;
+    }
+
+    public static String upperFirstLetter(String string) {
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
+
+    public static String createShareContent(Context context,
+                                            String city,
+                                            String desc,
+                                            String temp) {
+        return String.format(context.getString(R.string.share_content), city, desc, temp);
     }
 }

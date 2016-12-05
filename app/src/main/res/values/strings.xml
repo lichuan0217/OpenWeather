@@ -1,15 +1,26 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">OpenWeather</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
     <string name="action_city_manage">Manage City</string>
+    <string name="action_city_search">City Search</string>
 
     <string name="hint_search">Search</string>
+    <string name="error_message">Error when loading weather information</string>
+    <string name="info_now">Now</string>
+    <string name="share_content"><xliff:g id="city">%1$s</xliff:g> : <xliff:g id="desc">%2$s</xliff:g> <xliff:g id="temp">%3$s</xliff:g>\nPower by OPenMapWeather</string>
 
     <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+    <string name="format_last_update">Last update: <xliff:g id="date">%1$s</xliff:g></string>
+    <string name="format_last_update_just_now">Last update: just now</string>
+    <string name="format_last_update_in_half">Last update: <xliff:g id="date">%1$d</xliff:g> min ago</string>
     <string name="title_activity_settings">Settings</string>
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>
+
+
+    <string name="pref_category_measurement">Measurement</string>
 
     <string name="pref_units_label">Temperature Units</string>
     <string name="pref_units_label_metric">Metric</string>
@@ -17,6 +28,27 @@
     <string name="pref_units_key" translatable="false">units</string>
     <string name="pref_units_metric" translatable="false">metric</string>
     <string name="pref_units_imperial" translatable="false">imperial</string>
+
+    <string name="pref_change_background_key">ChangeBackgroundColor</string>
+    <string name="pref_change_background_summary">Change background color via weather</string>
+    <string name="pref_change_background_title">Change Background Color</string>
+
+    <string name="pref_category_auto_location">Location</string>
+    <string name="pref_auto_location_key">AutoLocationKey</string>
+    <string name="pref_auto_location_title">Auto Location</string>
+    <string name="pref_auto_location_summary">Automatically determine your current location</string>
+
+    <string name="pref_category_notification">Notification</string>
+
+    <string name="pref_show_notification_key">ShowNotification</string>
+    <string name="pref_show_notification_summary">Show temperature in the status bar</string>
+    <string name="pref_show_notification_title">Show Temp. in StatusBar</string>
+
+    <string name="pref_notification_choose_city_key">ChooseCity</string>
+    <string name="pref_notification_title">Choose city</string>
+    <string name="pref_notification_summary">Choose the city you want to show in notification</string>
+
+
     <string name="title_activity_city_manage">CityManageActivity</string>
     <string name="title_activity_detail">DetailActivity</string>
 
@@ -29,5 +61,8 @@
 
     <!-- For Shared Element Transitions -->
     <string name="detail_icon_transition_name" translatable="false">TN_DetailIcon</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="title_activity_location_manage">Manage locations</string>
 
 </resources>

@@ -3,37 +3,42 @@ package top.lemonsoda.openweather.domain.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import top.lemonsoda.openweather.model.entry.City;
 
 /**
  * Created by Chuan on 7/26/16.
  */
 public class CitySharedPreference {
 
-    public static void saveCityList(Context context, List<String> cities) {
+    public static void saveManagedCityList(Context context, List<City> cities) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
         String jsonCities = gson.toJson(cities);
 
-        editor.putString(Constants.PREF_CITY_KEY, jsonCities);
+        editor.putString(Constants.PREF_MANAGE_CITY_KEY, jsonCities);
         editor.commit();
     }
 
-    public static ArrayList<String> getCityList(Context context) {
+    public static List<City> getManagedCityList(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        List<String> cityList;
+        List<City> cityList;
 
-        if (preferences.contains(Constants.PREF_CITY_KEY)) {
-            String jsonCities = preferences.getString(Constants.PREF_CITY_KEY, null);
+        if (preferences.contains(Constants.PREF_MANAGE_CITY_KEY)) {
+            String jsonCities = preferences.getString(Constants.PREF_MANAGE_CITY_KEY, null);
             Gson gson = new Gson();
-            String[] cityItems = gson.fromJson(jsonCities, String[].class);
+            City[] cityItems = gson.fromJson(jsonCities, City[].class);
 
             cityList = Arrays.asList(cityItems);
             cityList = new ArrayList<>(cityList);
@@ -41,23 +46,25 @@ public class CitySharedPreference {
             return null;
         }
 
-        return (ArrayList<String>) cityList;
+        return cityList;
     }
 
-    public static void addCity(Context context, String city) {
-        List<String> cityList = getCityList(context);
+    public static Map<Integer, City> getManagedCityListMap(Context context) {
+        List<City> list = getManagedCityList(context);
+        Map<Integer, City> map = new HashMap<>();
+        for (City city : list) {
+            map.put(city.get_id(), city);
+        }
+        return map;
+    }
+
+    public static void addManagedCity(Context context, City city) {
+        List<City> cityList = getManagedCityList(context);
         if (cityList == null) {
             cityList = new ArrayList<>();
         }
         cityList.add(city);
-        saveCityList(context, cityList);
-    }
-
-    public static void removeCity(Context context, String city) {
-        List<String> cityList = getCityList(context);
-        if (cityList != null) {
-            cityList.remove(city);
-            saveCityList(context, cityList);
-        }
+        Log.d("chuanl ", "CityList : " + cityList.toString());
+        saveManagedCityList(context, cityList);
     }
 }

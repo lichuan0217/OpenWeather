@@ -35,4 +35,30 @@ public class WeatherModelImpl implements IWeatherModel {
 
         OpenWeatherMapManager.getInstance().getWeatherByName(weatherObserver, cityName, 4);
     }
+
+    @Override
+    public void loadWeatherById(int id, final IOnWeatherListener listener) {
+        Observer<Weather> weatherObserver = new Observer<Weather>() {
+
+            private Weather weather;
+
+            @Override
+            public void onCompleted() {
+                listener.onSuccess(weather);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                listener.onError();
+            }
+
+            @Override
+            public void onNext(Weather w) {
+                weather = w;
+            }
+        };
+
+        OpenWeatherMapManager.getInstance().getWeatherById(weatherObserver, id, 4);
+    }
 }

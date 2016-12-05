@@ -3,15 +3,21 @@ package top.lemonsoda.openweather.view.ui.helper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import java.util.List;
+
+import top.lemonsoda.openweather.model.entry.City;
+
 /**
  * Created by Chuan on 7/26/16.
  */
 public class CityItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter adapter;
+    private List<City> cityList;
 
-    public CityItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public CityItemTouchHelperCallback(ItemTouchHelperAdapter adapter, List<City> cityList) {
         this.adapter = adapter;
+        this.cityList = cityList;
     }
 
     @Override
@@ -35,11 +41,15 @@ public class CityItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        if (cityList.size() > 1)
+            return true;
+        return false;
     }
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return true;
+        if (cityList.size() > 1)
+            return true;
+        return false;
     }
 }

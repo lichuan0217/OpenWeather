@@ -7,36 +7,37 @@ import android.support.v4.view.PagerAdapter;
 
 import java.util.List;
 
+import top.lemonsoda.openweather.model.entry.City;
 import top.lemonsoda.openweather.view.ui.fragment.WeatherFragment;
 
 /**
  * Created by Chuan on 8/4/16.
  */
 public class WeatherPagerAdapter extends FragmentPagerAdapter {
-    private List<String> cityList;
+    private List<City> locationList;
     private long baseId = 0;
     private long countPre = 0;
 
-    public WeatherPagerAdapter(FragmentManager fm, List<String> cities) {
+    public WeatherPagerAdapter(FragmentManager fm, List<City> locations) {
         super(fm);
-        this.cityList = cities;
-        countPre = cityList.size();
+        locationList = locations;
+        countPre = locationList.size();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return WeatherFragment.newInstance(cityList.get(position), position);
+        return WeatherFragment.newInstance(locationList.get(position), position);
     }
 
     @Override
     public int getCount() {
-        return cityList.size();
+        return locationList.size();
     }
 
-    public void updateCityList(List<String> cityList) {
-        this.cityList = cityList;
+    public void updateLocationList(List<City> locations) {
+        locationList = locations;
         baseId += getCount() + countPre;
-        countPre = cityList.size();
+        countPre = locationList.size();
     }
 
 

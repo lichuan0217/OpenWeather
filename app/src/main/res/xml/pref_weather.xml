@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
-        android:title="@string/pref_units_label"
-        android:key="@string/pref_units_key"
-        android:defaultValue="@string/pref_units_metric"
-        android:entryValues="@array/pref_units_values"
-        android:entries="@array/pref_units_options"/>
+
+    <PreferenceCategory android:title="@string/pref_category_measurement">
+
+        <ListPreference
+            android:defaultValue="@string/pref_units_metric"
+            android:entries="@array/pref_units_options"
+            android:entryValues="@array/pref_units_values"
+            android:key="@string/pref_units_key"
+            android:title="@string/pref_units_label" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_auto_location">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_auto_location_key"
+            android:summary="@string/pref_auto_location_summary"
+            android:title="@string/pref_auto_location_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_notification">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_show_notification_key"
+            android:title="@string/pref_show_notification_title" />
+
+        <ListPreference
+            android:dependency="@string/pref_show_notification_key"
+            android:key="@string/pref_notification_choose_city_key"
+            android:title="@string/pref_notification_title" />
+
+    </PreferenceCategory>
+
 
 </PreferenceScreen>

@@ -2,27 +2,19 @@ package top.lemonsoda.openweather.view.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +23,7 @@ import butterknife.ButterKnife;
 import top.lemonsoda.openweather.R;
 import top.lemonsoda.openweather.domain.utils.CitySharedPreference;
 import top.lemonsoda.openweather.domain.utils.Constants;
-import top.lemonsoda.openweather.model.entry.Weather;
+import top.lemonsoda.openweather.model.entry.City;
 import top.lemonsoda.openweather.view.ui.helper.CityItemTouchHelperCallback;
 import top.lemonsoda.openweather.view.ui.helper.ItemTouchHelperAdapter;
 
@@ -45,7 +37,7 @@ public class CityManageActivity extends BaseActivity {
     @BindView(R.id.actv_search)
     AutoCompleteTextView actvSearch;
 
-    private List<String> cityList;
+    private List<City> cityList;
     private CityListAdapter cityListAdapter;
 
     private boolean dataChanged = false;
@@ -58,35 +50,42 @@ public class CityManageActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        cityList = CitySharedPreference.getCityList(this);
+        cityList = CitySharedPreference.getManagedCityList(this);
         Log.d(TAG, "CityList: " + cityList == null ? "null" : cityList.toString());
 
         if (cityList == null) {
-            CitySharedPreference.addCity(this, "Beijing");
-            cityList = CitySharedPreference.getCityList(this);
+            City beijing = new City();
+            // "lat": 39.907501, "country": "CN", "_id": 1816670, "lon": 116.397232, "name": "Beijing"
+            beijing.setName("Beijing");
+            beijing.set_id(1816670);
+            beijing.setCountry("CN");
+            beijing.setLat(39.907501);
+            beijing.setLon(116.397232);
+            CitySharedPreference.addManagedCity(this, beijing);
+            cityList = CitySharedPreference.getManagedCityList(this);
         }
 
         String[] cities = getResources().getStringArray(R.array.city_list);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, cities);
         actvSearch.setAdapter(adapter);
-        actvSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String city = (String) parent.getItemAtPosition(position);
-                if (!cityList.contains(city)) {
-                    CitySharedPreference.addCity(CityManageActivity.this, city);
-                    cityList.add(city);
-                    cityListAdapter.notifyDataSetChanged();
-                    dataChanged = true;
-                }
-                actvSearch.setText("");
-            }
-        });
+//        actvSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String city = (String) parent.getItemAtPosition(position);
+//                if (!cityList.contains(city)) {
+//                    CitySharedPreference.addCity(CityManageActivity.this, city);
+//                    cityList.add(city);
+//                    cityListAdapter.notifyDataSetChanged();
+//                    dataChanged = true;
+//                }
+//                actvSearch.setText("");
+//            }
+//        });
 
         rvCityList.setLayoutManager(new LinearLayoutManager(this));
         cityListAdapter = new CityListAdapter(this, cityList);
         rvCityList.setAdapter(cityListAdapter);
-        ItemTouchHelper.Callback callback = new CityItemTouchHelperCallback(cityListAdapter);
+        ItemTouchHelper.Callback callback = new CityItemTouchHelperCallback(cityListAdapter, cityList);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rvCityList);
     }
@@ -114,9 +113,9 @@ public class CityManageActivity extends BaseActivity {
 
         private LayoutInflater inflater;
         private Context context;
-        private List<String> cityList;
+        private List<City> cityList;
 
-        public CityListAdapter(Context cxt, List<String> cities) {
+        public CityListAdapter(Context cxt, List<City> cities) {
             this.cityList = cities;
             this.context = cxt;
             this.inflater = LayoutInflater.from(context);
@@ -131,7 +130,7 @@ public class CityManageActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             CityItemViewHolder viewHolder = (CityItemViewHolder) holder;
-            viewHolder.tvCityName.setText(this.cityList.get(position));
+            viewHolder.tvCityName.setText(this.cityList.get(position).getName());
         }
 
         @Override
@@ -151,7 +150,7 @@ public class CityManageActivity extends BaseActivity {
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
-            CitySharedPreference.saveCityList(CityManageActivity.this, cityList);
+            CitySharedPreference.saveManagedCityList(CityManageActivity.this, cityList);
             dataChanged = true;
         }
 
@@ -159,7 +158,7 @@ public class CityManageActivity extends BaseActivity {
         public void onItemDismiss(int position) {
             this.cityList.remove(position);
             notifyItemRemoved(position);
-            CitySharedPreference.saveCityList(CityManageActivity.this, cityList);
+            CitySharedPreference.saveManagedCityList(CityManageActivity.this, cityList);
             dataChanged = true;
             dataChangeId = position;
         }

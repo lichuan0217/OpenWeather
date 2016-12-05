@@ -16,12 +16,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="AppTheme.Detail">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">

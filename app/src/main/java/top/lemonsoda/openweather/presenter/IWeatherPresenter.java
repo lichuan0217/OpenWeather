@@ -6,4 +6,6 @@ package top.lemonsoda.openweather.presenter;
 public interface IWeatherPresenter {
 
     void getWeather(String cityName);
+
+    void getWeatherById(int id);
 }

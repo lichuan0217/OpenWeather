@@ -37,4 +37,10 @@ public class WeatherPresenterImpl implements IWeatherPresenter, IOnWeatherListen
         weatherView.showLoading();
         weatherModel.loadWeather(cityName, this);
     }
+
+    @Override
+    public void getWeatherById(int id) {
+        weatherView.showLoading();
+        weatherModel.loadWeatherById(id, this);
+    }
 }

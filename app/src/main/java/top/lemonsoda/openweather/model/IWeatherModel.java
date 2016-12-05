@@ -8,4 +8,6 @@ import top.lemonsoda.openweather.presenter.IOnWeatherListener;
 public interface IWeatherModel {
 
     void loadWeather(String cityName, IOnWeatherListener listener);
+
+    void loadWeatherById(int id, IOnWeatherListener listener);
 }

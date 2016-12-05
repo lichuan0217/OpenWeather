@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
+import top.lemonsoda.openweather.domain.utils.CitySharedPreference;
+
 /**
  * Created by Chuan on 8/1/16.
  */
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DISPLAY_LENGTH = 2500;
+    private static final long SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
