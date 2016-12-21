@@ -64,6 +64,7 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/menu_drawer"
+        app:theme="@style/NavigationDrawer"
         app:itemIconTint="@color/grey"
         app:itemTextColor="@color/grey"/>
 

@@ -35,19 +35,20 @@
             android:gravity="center_horizontal"
             android:text="N/A"
             android:textColor="@color/primary_text"
-            android:textSize="86sp" />
+            android:textSize="72sp" />
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:padding="5dp">
 
             <ImageView
                 android:id="@+id/img_icon_rain"
-                android:layout_width="30dp"
-                android:layout_height="36dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginBottom="5dp"
                 android:src="@mipmap/ic_weather_rain" />
 
@@ -62,12 +63,12 @@
                 android:gravity="center_horizontal"
                 android:text="N/A"
                 android:textColor="@color/secondary_text"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/img_icon_wind"
-                android:layout_width="30dp"
-                android:layout_height="36dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_below="@id/img_icon_rain"
                 android:src="@mipmap/ic_weather_wind" />
 
@@ -82,7 +83,7 @@
                 android:gravity="center_horizontal"
                 android:text="N/A"
                 android:textColor="@color/secondary_text"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
 
         </RelativeLayout>

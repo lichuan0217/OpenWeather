@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -56,7 +57,10 @@ public class DetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        if (getIntent() != null) {
+        if (savedInstanceState != null) {
+            forecastWeather = savedInstanceState.getParcelable(Constants.ARG_DETAIL_KEY);
+            index = savedInstanceState.getInt(Constants.ARG_DETAIL_DAY);
+        } else if (getIntent() != null) {
             forecastWeather = getIntent().getParcelableExtra(Constants.ARG_DETAIL_KEY);
             index = getIntent().getIntExtra(Constants.ARG_DETAIL_DAY, 0);
         }
@@ -65,6 +69,13 @@ public class DetailActivity extends BaseActivity {
             return;
 
         setDetailInfo();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.ARG_DETAIL_KEY, forecastWeather);
+        outState.putInt(Constants.ARG_DETAIL_DAY, index);
     }
 
     @Override
@@ -83,6 +94,7 @@ public class DetailActivity extends BaseActivity {
         tvDetailForecast.setText(bean.getWeather().get(0).getMain());
         tvDetailHigh.setText(Utils.formatTemperature(this, bean.getTemp().getMax()));
         tvDetailLow.setText(Utils.formatTemperature(this, bean.getTemp().getMin()));
+        Log.d("----", getString(R.string.format_humidity, bean.getHumidity()));
         tvDetailHumidity.setText(getString(R.string.format_humidity, bean.getHumidity()));
         tvDetailPressure.setText(getString(R.string.format_pressure, bean.getPressure()));
         tvDetailWind.setText(Utils.getFormattedWind(this, (float) bean.getSpeed(), (float) bean.getDeg()));
