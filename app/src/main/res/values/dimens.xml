@@ -15,5 +15,7 @@
     <dimen name="view_padding_vertical">@dimen/abc_list_item_padding_horizontal_material</dimen>
 
     <dimen name="today_temperature_text_size">72sp</dimen>
+    <dimen name="place_view_padding">16dp</dimen>
+    <dimen name="place_icon">72dp</dimen>
 
 </resources>
