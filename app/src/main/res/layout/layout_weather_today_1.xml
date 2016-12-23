@@ -19,12 +19,14 @@
         android:layout_gravity="center"
         android:maxHeight="@dimen/detail_icon"
         android:maxWidth="@dimen/detail_icon"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:src="@mipmap/art_clear" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tv_temp"
@@ -35,15 +37,15 @@
             android:gravity="center_horizontal"
             android:text="N/A"
             android:textColor="@color/primary_text"
-            android:textSize="72sp" />
+            android:textSize="68sp" />
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
 
             <ImageView
                 android:id="@+id/img_icon_rain"
