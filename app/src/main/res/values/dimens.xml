@@ -17,5 +17,8 @@
     <dimen name="today_temperature_text_size">72sp</dimen>
     <dimen name="place_view_padding">16dp</dimen>
     <dimen name="place_icon">72dp</dimen>
+    <dimen name="place_card_margin">8dp</dimen>
+    <dimen name="place_card_radius">8dp</dimen>
+    <dimen name="place_card_elevation">8dp</dimen>
 
 </resources>

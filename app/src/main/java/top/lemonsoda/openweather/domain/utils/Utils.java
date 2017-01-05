@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 
 import java.text.ParseException;
@@ -127,6 +128,13 @@ public class Utils {
             return R.mipmap.ic_cloudy;
         }
         return R.mipmap.ic_weather_rain;
+    }
+
+
+    public static String getFormatDate(Context context, int millis) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd HH:mm");
+        return simpleDateFormat.format(new Date(millis * 1000l));
+//        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_TIME);
     }
 
     public static String getFormatLastUpdate(Context context, String date) {

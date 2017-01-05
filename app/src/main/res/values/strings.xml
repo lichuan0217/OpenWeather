@@ -64,6 +64,6 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="title_activity_location_manage">Manage locations</string>
-    <string name="title_activity_place">PlaceActivity</string>
+    <string name="title_activity_place">Places</string>
 
 </resources>
