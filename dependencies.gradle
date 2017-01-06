@@ -1,0 +1,46 @@
+def supportVersion = "24.2.1"
+def rxandroidVersion = "1.2.0"
+def rxjavaVersion = "1.1.6"
+def retrofitVersion = "2.1.0"
+def butterknifeVersion = "8.4.0"
+
+
+project.ext {
+    android = [
+            compileSdkVersion: 24,
+            buildToolsVersion: "24.0.3",
+            applicationId    : "top.lemonsoda.openweather",
+            minSdkVersion    : 13,
+            targetSdkVersion : 24,
+            versionCode      : 1,
+            versionName      : "1.0"
+    ]
+
+    dependencies = [
+            //android-support
+            "appcompat-v7"               : "com.android.support:appcompat-v7:${supportVersion}",
+            "design"                     : "com.android.support:design:${supportVersion}",
+            "recyclerview"               : "com.android.support:recyclerview-v7:${supportVersion}",
+            "cardview"                   : "com.android.support:cardview-v7:${supportVersion}",
+            "gridlayout"                 : "com.android.support:gridlayout-v7:${supportVersion}",
+
+            //rx
+            "rxandroid"                  : "io.reactivex:rxandroid:${rxandroidVersion}",
+            "rxjava"                     : "io.reactivex:rxjava:${rxjavaVersion}",
+
+            //retrofit
+            "retrofit"                   : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            "retrofit-converters"        : "com.squareup.retrofit2:retrofit-converters:${retrofitVersion}",
+            "retrofit-adapters"          : "com.squareup.retrofit2:retrofit-adapters:${retrofitVersion}",
+            "converter-gson"             : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            "adapter-rxjava"             : "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
+
+            //butterknife
+            "butterknife-compiler"       : "com.jakewharton:butterknife-compiler:${butterknifeVersion}",
+            "butterknife"                : "com.jakewharton:butterknife:${butterknifeVersion}",
+
+            //others
+            "logging-interceptor"        : "com.squareup.okhttp3:logging-interceptor:3.4.1",
+            "circleimageview"            : "de.hdodenhof:circleimageview:2.0.0",
+    ]
+}
