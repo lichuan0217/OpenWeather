@@ -51,7 +51,6 @@ public class WeatherActivity extends BaseActivity
     private static final String TAG = WeatherActivity.class.getCanonicalName();
 
     private WeatherPagerAdapter weatherPagerAdapter;
-
     private List<City> locationList;
     private HashMap<Integer, Weather> weatherInfoMap;
 

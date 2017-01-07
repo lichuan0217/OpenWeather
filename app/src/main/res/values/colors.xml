@@ -13,9 +13,17 @@
 
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FBC02D</color>
+    <color name="grey_50">#FAFAFA</color>
+    <color name="black">#000000</color>
+    <color name="grey_900">#212121</color>
+    <color name="grey_500">#9E9E9E</color>
 
     <color name="primary_text">@color/white</color>
     <color name="secondary_text">#EEEEEE</color>
+
+    <color name="primary_text_md">@color/black</color>
+    <color name="secondary_text_md">@color/grey_900</color>
+    <color name="bg_weather">@color/white</color>
 
     <color name="detail_accent_label">#90A4AE</color>
     <color name="detail_accent_pane_background">#455A64</color>

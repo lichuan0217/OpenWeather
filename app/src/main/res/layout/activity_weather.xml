@@ -9,52 +9,54 @@
     android:fitsSystemWindows="true"
     tools:context=".view.ui.activity.WeatherActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:fitsSystemWindows="true">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--android:fitsSystemWindows="true">-->
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/toolbar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?attr/actionBarSize">-->
 
-            <TextView
-                android:id="@+id/tv_toolbar_title"
-                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Title"
-                android:textColor="@color/primary_text" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_toolbar_title"-->
+    <!--style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:text="Title"-->
+    <!--android:textColor="@color/primary_text" />-->
 
-        </android.support.v7.widget.Toolbar>
+    <!--</android.support.v7.widget.Toolbar>-->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+    <!--<android.support.v4.view.ViewPager-->
+    <!--android:id="@+id/container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
 
-            <LinearLayout
-                android:id="@+id/ll_dot_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="200dp"
-                android:gravity="right"
-                android:orientation="horizontal"
-                android:padding="20dp" />
+    <!--<LinearLayout-->
+    <!--android:id="@+id/ll_dot_group"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_marginBottom="200dp"-->
+    <!--android:gravity="right"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="20dp" />-->
 
-        </RelativeLayout>
+    <!--</RelativeLayout>-->
 
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
+
+    <include layout="@layout/content_weather" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
@@ -63,24 +65,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/menu_drawer"
-        app:theme="@style/NavigationDrawer"
         app:itemIconTint="@color/grey"
-        app:itemTextColor="@color/grey"/>
+        app:itemTextColor="@color/grey"
+        app:menu="@menu/menu_drawer"
+        app:theme="@style/NavigationDrawer" />
 
 </android.support.v4.widget.DrawerLayout>
-
-
-    <!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/main_content"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:fitsSystemWindows="true"--><!--tools:context=".view.ui.activity.WeatherActivity">-->
-
-    <!--<include layout="@layout/content_toolbar" />-->
-
-    <!--<RelativeLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-    <!--<android.support.v4.view.ViewPager--><!--android:id="@+id/container"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent" />-->
-
-    <!--<LinearLayout--><!--android:id="@+id/ll_dot_group"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_alignParentBottom="true"--><!--android:layout_marginBottom="200dp"--><!--android:gravity="right"--><!--android:orientation="horizontal"--><!--android:padding="20dp" />-->
-
-    <!--</RelativeLayout>-->
-
-    <!--</android.support.design.widget.CoordinatorLayout>-->

@@ -74,15 +74,6 @@ public class WeatherFragment extends BaseFragment
     public WeatherFragment() {
     }
 
-    public static WeatherFragment newInstance(String cityName, int pos) {
-        WeatherFragment fragment = new WeatherFragment();
-        Bundle args = new Bundle();
-        args.putString(Constants.ARG_CITY_NAME, cityName);
-        args.putInt(Constants.ARG_CITY_INDEX, pos);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static WeatherFragment newInstance(City city, int pos) {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
