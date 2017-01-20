@@ -22,7 +22,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     compile rootProject.ext.dependencies.getAt("appcompat-v7")
     compile rootProject.ext.dependencies.getAt("design")
     compile rootProject.ext.dependencies.getAt("recyclerview")
@@ -39,4 +38,6 @@ dependencies {
     compile rootProject.ext.dependencies.getAt("circleimageview")
     annotationProcessor rootProject.ext.dependencies.getAt("butterknife-compiler")
     compile rootProject.ext.dependencies.getAt("butterknife")
+    compile 'com.android.support:support-v4:24.2.1'
+    testCompile 'junit:junit:4.12'
 }

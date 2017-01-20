@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import top.lemonsoda.openweather.model.entry.Weather;
 import top.lemonsoda.openweather.presenter.IWeatherPresenter;
 import top.lemonsoda.openweather.presenter.impl.WeatherPresenterImpl;
 import top.lemonsoda.openweather.view.IWeatherView;
+import top.lemonsoda.openweather.view.ui.activity.MainActivity;
 import top.lemonsoda.openweather.view.ui.activity.WeatherActivity;
 
 /**
@@ -83,6 +85,13 @@ public class WeatherFragment extends BaseFragment
         return fragment;
     }
 
+    public static WeatherFragment newInstance() {
+        WeatherFragment fragment = new WeatherFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +112,7 @@ public class WeatherFragment extends BaseFragment
         ButterKnife.bind(this, view);
 
         srlWeather.setOnRefreshListener(this);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvForecast.setLayoutManager(llm);
         forecastAdapter = new ForecastAdapter();
         rvForecast.setAdapter(forecastAdapter);
@@ -227,9 +236,9 @@ public class WeatherFragment extends BaseFragment
             viewHolder.tvDate.setText(Utils.getMonthDay(getActivity(), dt));
             viewHolder.tvTemp.setText(Utils.formatTemperature(getActivity(), d_temp));
             viewHolder.imgIcon.setImageResource(Utils.getArtResourceForWeatherCondition(weather_id));
-            ViewGroup.LayoutParams params = viewHolder.llContainer.getLayoutParams();
-            params.width = Utils.getScreenWidth(getActivity()) / 4;
-            viewHolder.llContainer.setLayoutParams(params);
+//            ViewGroup.LayoutParams params = viewHolder.llContainer.getLayoutParams();
+//            params.width = Utils.getScreenWidth(getActivity()) / 4;
+//            viewHolder.llContainer.setLayoutParams(params);
         }
 
         @Override
@@ -237,7 +246,7 @@ public class WeatherFragment extends BaseFragment
             if (weatherInfo == null)
                 return 0;
             else {
-                return 4;
+                return 7;
             }
         }
     }
@@ -254,7 +263,7 @@ public class WeatherFragment extends BaseFragment
         public ImageView imgIcon;
 
         @BindView(R.id.ll_item_container)
-        LinearLayout llContainer;
+        RelativeLayout llContainer;
 
         @OnClick(R.id.ll_item_container)
         void onClick() {

@@ -8,7 +8,7 @@ def butterknifeVersion = "8.4.0"
 project.ext {
     android = [
             compileSdkVersion: 24,
-            buildToolsVersion: "24.0.3",
+            buildToolsVersion: "24.0.1",
             applicationId    : "top.lemonsoda.openweather",
             minSdkVersion    : 13,
             targetSdkVersion : 24,

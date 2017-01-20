@@ -4,13 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_marginBottom="4dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="8dp"
-    android:layout_weight="1"
-    app:cardElevation="4dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    tools:context="top.lemonsoda.openweather.view.ui.fragment.WeatherFragment"
+    tools:showIn="@layout/fragment_weather">
 
     <LinearLayout
         android:id="@+id/ll_weather_container"
@@ -18,9 +16,7 @@
         android:layout_height="match_parent"
         android:background="@color/bg_weather"
         android:gravity="center"
-        android:orientation="vertical"
-        tools:context="top.lemonsoda.openweather.view.ui.fragment.WeatherFragment"
-        tools:showIn="@layout/fragment_weather">
+        android:orientation="vertical">
 
 
         <ImageView
@@ -36,6 +32,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -107,9 +104,10 @@
             android:id="@+id/tv_last_update"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="Last update: n/a"
-            android:textColor="@color/secondary_text_md"
+            android:textColor="@color/update_text_md"
             android:textSize="14sp" />
 
     </LinearLayout>

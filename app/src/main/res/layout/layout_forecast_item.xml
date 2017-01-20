@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_item_container"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:gravity="center_vertical"
     android:clickable="true"
     android:focusable="true"
     android:background="?android:attr/selectableItemBackground">
-
-    <TextView
-        android:id="@+id/tv_item_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:text="Now"
-        android:textColor="@color/primary_text"
-        android:textSize="22sp" />
 
     <ImageView
         android:id="@+id/img_item_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:src="@mipmap/art_rain" />
+
+    <TextView
+        android:id="@+id/tv_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="12/03"
+        android:textColor="@color/secondary_text_md"
+        android:textSize="18sp"
+        android:layout_toRightOf="@id/img_item_icon"/>
+
 
     <TextView
         android:id="@+id/tv_item_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="sans-serif"
         android:text="21\u00B0"
-        android:textColor="@color/secondary_text"
-        android:textSize="18sp" />
+        android:textColor="@color/primary_text_md"
+        android:textSize="22sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"/>
 
-</LinearLayout>
+</RelativeLayout>

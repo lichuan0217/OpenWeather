@@ -23,6 +23,7 @@
 
     <color name="primary_text_md">@color/black</color>
     <color name="secondary_text_md">@color/grey_900</color>
+    <color name="update_text_md">@color/grey_500</color>
     <color name="bg_weather">@color/white</color>
 
     <color name="detail_accent_label">#90A4AE</color>
