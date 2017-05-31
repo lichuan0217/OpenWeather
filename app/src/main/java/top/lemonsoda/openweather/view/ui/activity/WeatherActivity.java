@@ -74,7 +74,7 @@ public class WeatherActivity extends BaseActivity
     private LocationManager locationManager;
     private String provider;
     private int REQUEST_GRANTED_LOCATION = 0;
-    private boolean isAutoLocationEnable = false;
+    private boolean isAutoLocationEnable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

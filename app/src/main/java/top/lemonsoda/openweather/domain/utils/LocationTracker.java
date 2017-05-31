@@ -21,7 +21,6 @@ public class LocationTracker implements LocationListener {
     boolean isNetworkEnable = false;
 
     boolean canGetLocation = false;
-
     Location location;
     double lat;
     double lon;
@@ -32,43 +31,90 @@ public class LocationTracker implements LocationListener {
     public static final String TAG = LocationTracker.class.getCanonicalName();
 
     protected LocationManager locationManager;
+    private String provider;
 
     public LocationTracker(Context context) {
         this.context = context;
+        init();
     }
 
-    public Location getLocation() {
+    private void init() {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "--- Permission not allowed");
+            return;
+        }
 
         isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if (!isGPSEnable && !isNetworkEnable) {
-            Log.d(TAG, "No network provider is enable");
+            Log.d(TAG, "--- No Location Provider is enable");
         } else {
             this.canGetLocation = true;
-
-            if (isNetworkEnable) {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-//                    return TODO;
-                }
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            if (isGPSEnable) {
+                Log.d(TAG, "--- GPS Enable");
+                provider = LocationManager.GPS_PROVIDER;
+            } else if (isNetworkEnable) {
+                Log.d(TAG, "--- Network Enable");
+                provider = LocationManager.NETWORK_PROVIDER;
             }
+//            location = locationManager.getLastKnownLocation(provider);
+//            if (location != null) {
+//                Log.d(TAG, "--- Location is not NULL");
+//                lat = location.getLatitude();
+//                lon = location.getLongitude();
+//            }
+//            locationManager.requestLocationUpdates(
+//                    provider,
+//                    MIN_TIME_BW_UPDATES,
+//                    MIN_DISTANCE_CHANGE_FOR_UPDATES,
+//                    this);
         }
+    }
 
-        return location;
+    public boolean canGetLocation() {
+        return canGetLocation;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void getLocation() {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "--- getLocation() permission not allowed");
+            return;
+        }
+        location = locationManager.getLastKnownLocation(provider);
+        if (location != null) {
+            Log.d(TAG, "--- Location is not NULL");
+            lat = location.getLatitude();
+            lon = location.getLongitude();
+        }
+        locationManager.requestLocationUpdates(
+                    provider,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                    this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
+        Log.d(TAG, "--- onLocationChanged");
+        lat = location.getLatitude();
+        lon = location.getLongitude();
     }
 
     @Override

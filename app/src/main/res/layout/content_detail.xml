@@ -9,7 +9,7 @@
     tools:context="top.lemonsoda.openweather.view.ui.activity.DetailActivity"
     tools:showIn="@layout/activity_detail">
 
-    <android.support.v7.widget.Space
+    <android.support.v4.widget.Space
         android:layout_height="@dimen/detail_view_padding_vertical"
         app:layout_columnSpan="2"
         app:layout_columnWeight="1"
@@ -71,7 +71,7 @@
         app:layout_columnWeight="1"
         tools:text="10" />
 
-    <android.support.v7.widget.Space
+    <android.support.v4.widget.Space
         android:layout_height="@dimen/detail_view_padding_vertical"
         app:layout_columnSpan="2"
         app:layout_columnWeight="1"

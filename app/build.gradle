@@ -1,16 +1,15 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        applicationId "top.lemonsoda.openweather"
-        minSdkVersion 13
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
     }
     buildTypes {
         release {
@@ -23,20 +22,41 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:design:24.0.0'
-    apt 'com.jakewharton:butterknife-compiler:8.0.1'
-    compile 'com.jakewharton:butterknife:8.0.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:retrofit-converters:2.1.0'
-    compile 'com.squareup.retrofit2:retrofit-adapters:2.1.0'
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.android.support:cardview-v7:24.0.0'
-    compile 'com.android.support:gridlayout-v7:24.0.0'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
+
+    // Android Support
+    compile rootProject.ext.dependencies.getAt("supprot-v4")
+    compile rootProject.ext.dependencies.getAt("appcompat-v7")
+    compile rootProject.ext.dependencies.getAt("design")
+    compile rootProject.ext.dependencies.getAt("recyclerview")
+    compile rootProject.ext.dependencies.getAt("cardview")
+    compile rootProject.ext.dependencies.getAt("gridlayout")
+    compile 'com.android.support.constraint:constraint-layout:+'
+
+    // Dagger 2
+    compile rootProject.ext.dependencies.getAt("dagger")
+    annotationProcessor rootProject.ext.dependencies.getAt("dagger-compiler")
+
+    // RxJava
+    compile rootProject.ext.dependencies.getAt("rxandroid")
+    compile rootProject.ext.dependencies.getAt("rxjava")
+
+    // Retrofit
+    compile rootProject.ext.dependencies.getAt("retrofit")
+    compile rootProject.ext.dependencies.getAt("retrofit-converters")
+    compile rootProject.ext.dependencies.getAt("retrofit-adapters")
+    compile rootProject.ext.dependencies.getAt("converter-gson")
+    compile rootProject.ext.dependencies.getAt("adapter-rxjava")
+    compile rootProject.ext.dependencies.getAt("okhttp")
+    compile rootProject.ext.dependencies.getAt("logging-interceptor")
+    compile rootProject.ext.dependencies.getAt("timber")
+
+    // Glide
+    compile rootProject.ext.dependencies.getAt("glide")
+
+    // ButterKnife
+    annotationProcessor rootProject.ext.dependencies.getAt("butterknife-compiler")
+    compile rootProject.ext.dependencies.getAt("butterknife")
+
+    // Custom View
+    compile rootProject.ext.dependencies.getAt("circleimageview")
 }

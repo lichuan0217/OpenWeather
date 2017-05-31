@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature android:name="android.hardware.location.gps" />
+
     <application
         android:name=".domain.application.App"
         android:allowBackup="true"
@@ -24,8 +26,8 @@
         <activity
             android:name=".view.ui.activity.WeatherActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Weather"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Weather" />
         <activity
             android:name=".view.ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -73,7 +75,12 @@
             android:name=".domain.contentprovider.CitySuggestionProvider"
             android:authorities="lemonsoda.top.openweather.citysuggestion"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
+
+        <activity
+            android:name=".view.ui.activity.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
