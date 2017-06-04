@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import top.lemonsoda.openweather.domain.utils.CitySharedPreference;
+import top.lemonsoda.openweather.domain.utils.Constants;
 
 /**
  * Created by Chuan on 8/1/16.
@@ -21,18 +22,23 @@ public class SplashActivity extends AppCompatActivity {
     private static final long SPLASH_DISPLAY_LENGTH = 1500;
     private int REQUEST_GRANTED_LOCATION = 0;
 
+    private Handler handler = new Handler();
+    private Runnable runnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new Handler().postDelayed(new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
 //                requestLocationPermission();
-                goToWeather();
+//                goToWeather();
+                goToMain();
             }
-        }, SPLASH_DISPLAY_LENGTH);
+        };
 
+        handler.postDelayed(runnable, SPLASH_DISPLAY_LENGTH);
     }
 
     private void requestLocationPermission() {
@@ -81,4 +87,9 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        handler.removeCallbacks(runnable);
+    }
 }

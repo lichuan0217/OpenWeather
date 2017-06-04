@@ -21,7 +21,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
 
     // Android Support
     compile rootProject.ext.dependencies.getAt("supprot-v4")
@@ -30,7 +29,6 @@ dependencies {
     compile rootProject.ext.dependencies.getAt("recyclerview")
     compile rootProject.ext.dependencies.getAt("cardview")
     compile rootProject.ext.dependencies.getAt("gridlayout")
-    compile 'com.android.support.constraint:constraint-layout:+'
 
     // Dagger 2
     compile rootProject.ext.dependencies.getAt("dagger")
@@ -59,4 +57,7 @@ dependencies {
 
     // Custom View
     compile rootProject.ext.dependencies.getAt("circleimageview")
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
+    testCompile 'junit:junit:4.12'
 }

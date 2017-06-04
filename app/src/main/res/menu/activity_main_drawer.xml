@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_overview"
+            android:checked="true"
+            android:icon="@drawable/ic_overview_black"
+            android:title="Overview" />
+        <item
+            android:id="@+id/nav_daily"
+            android:icon="@drawable/ic_daily_black_24dp"
+            android:title="Daily Forecasts" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_notification"
+                app:actionLayout="@layout/drawer_action_view_switch"
+                android:title="Weather Notification"/>
+            <item
+                android:id="@+id/nav_settings"
+                android:title="Settings" />
+            <item
+                android:id="@+id/nav_about"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>

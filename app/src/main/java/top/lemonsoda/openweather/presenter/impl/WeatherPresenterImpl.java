@@ -17,7 +17,7 @@ public class WeatherPresenterImpl implements IWeatherPresenter, IOnWeatherListen
 
     public WeatherPresenterImpl(IWeatherView weatherView) {
         this.weatherView = weatherView;
-        this.weatherModel = new WeatherModelImpl();
+        this.weatherModel = new WeatherModelImpl(null);
     }
 
     @Override

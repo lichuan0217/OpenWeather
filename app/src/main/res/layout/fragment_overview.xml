@@ -1,0 +1,71 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:windowBackground"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="top.lemonsoda.openweather.view.ui.fragment.OverviewFragment">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_weather_overview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll_weather_overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/layout_overview_current" />
+
+                    <include layout="@layout/layout_overview_future" />
+
+                    <include layout="@layout/layout_overview_current_detail" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/overview_power_margin"
+                        android:layout_marginTop="@dimen/overview_power_margin"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:text="@string/overview_powered_by"
+                        android:textColor="@color/overview_power_text"
+                        android:textSize="@dimen/overview_power_text" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/img_network_failed"
+                    android:layout_width="@dimen/overview_img_error_size"
+                    android:layout_height="@dimen/overview_img_error_size"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_network_fail"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+
+</FrameLayout>

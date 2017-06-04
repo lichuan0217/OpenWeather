@@ -1,5 +1,7 @@
 package top.lemonsoda.openweather.model;
 
+import rx.Observable;
+import top.lemonsoda.openweather.model.entry.Weather;
 import top.lemonsoda.openweather.presenter.IOnWeatherListener;
 
 /**
@@ -10,4 +12,6 @@ public interface IWeatherModel {
     void loadWeather(String cityName, IOnWeatherListener listener);
 
     void loadWeatherById(int id, IOnWeatherListener listener);
+
+    Observable<Weather> loadWeatherById(int id);
 }

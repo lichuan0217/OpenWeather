@@ -22,4 +22,8 @@ public class Constants {
     public static final int REQUEST_ADD_CITY = 0;
 
     public static final String AUTHORITY_CITY_SUGGESTION = "lemonsoda.top.openweather.citysuggestion";
+
+    public static final String CACHE_FILE_NAME = "OpenWeather";
+    public static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
+    public static final String ARG_CITY_IDS = "arg_city_ids";
 }

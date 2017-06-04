@@ -1,108 +1,229 @@
 package top.lemonsoda.openweather.view.ui.activity;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import top.lemonsoda.openweather.R;
-import top.lemonsoda.openweather.domain.utils.LocationTracker;
+import top.lemonsoda.openweather.domain.application.WeatherApplication;
+import top.lemonsoda.openweather.domain.net.WeatherService;
+import top.lemonsoda.openweather.domain.utils.ActivityUtils;
+import top.lemonsoda.openweather.domain.utils.CitySharedPreference;
+import top.lemonsoda.openweather.domain.utils.Constants;
+import top.lemonsoda.openweather.domain.utils.Utils;
+import top.lemonsoda.openweather.model.WeatherModelInterface;
+import top.lemonsoda.openweather.model.entry.City;
+import top.lemonsoda.openweather.model.entry.Weather;
+import top.lemonsoda.openweather.model.impl.WeatherModel;
+import top.lemonsoda.openweather.presenter.WeatherPresenterInterface;
+import top.lemonsoda.openweather.presenter.impl.WeatherPresenter;
+import top.lemonsoda.openweather.view.ui.custom.HeaderViewPager;
+import top.lemonsoda.openweather.view.ui.fragment.DailyFragment;
+import top.lemonsoda.openweather.view.ui.fragment.OverviewFragment;
+import top.lemonsoda.openweather.view.ui.helper.HeaderPagerAdapter;
+import top.lemonsoda.openweather.view.ui.helper.OnCityChangeListener;
+import top.lemonsoda.openweather.view.ui.helper.OnContainerInteractionListener;
+import top.lemonsoda.openweather.view.ui.helper.OnHeaderPageChangeListener;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        OnContainerInteractionListener,
+        OnCityChangeListener {
 
-    public static final String TAG = MainActivity.class.getCanonicalName();
-//    LocationTracker tracker;
+    private static final String TAG = MainActivity.class.getCanonicalName();
 
-    LocationManager locationManager;
-    String provider;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+
+    HeaderViewPager headerViewPager;
+
+    private List<City> cityList;
+    private HashMap<Integer, Weather> weatherHashMap;
+    private int currentPos = 0;
+    private WeatherPresenterInterface weatherPresenter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutResID = R.layout.activity_main;
         super.onCreate(savedInstanceState);
+        setSupportActionBar(toolbar);
 
-//        tracker = new LocationTracker(this);
-//        if (tracker.canGetLocation()) {
-//            tracker.getLocation();
-//            Log.d(TAG, "--- Get Location : " + tracker.getLat() + ", " + tracker.getLon());
-//        }
+        loadCityList();
+        setupNavigation();
 
-        requestLocation();
+        weatherHashMap = new HashMap<>();
+        WeatherService service = WeatherApplication.getWeatherApplication(this).getComponent().getWeatherService();
+        WeatherModelInterface weatherModel = new WeatherModel(service);
+        weatherPresenter = new WeatherPresenter(weatherModel);
+
+        OverviewFragment overviewFragment =
+                (OverviewFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fl_weather_container);
+        if (overviewFragment == null) {
+            overviewFragment = OverviewFragment.newInstance(cityList.get(0));
+            overviewFragment.setPresent(weatherPresenter);
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(),
+                    overviewFragment,
+                    R.id.fl_weather_container);
+        }
     }
 
-
-    private void requestLocation() {
-        //location
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        if (providers.contains(LocationManager.GPS_PROVIDER)) {
-            Log.d(TAG, "GPS Location Manager");
-            provider = LocationManager.GPS_PROVIDER;
-        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-            Log.d(TAG, "Network provider");
-            provider = LocationManager.NETWORK_PROVIDER;
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         } else {
-            Log.d(TAG, "No Location Provider");
-            Toast.makeText(this, "No Location Manager", Toast.LENGTH_LONG);
-            return;
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_overview) {
+            OverviewFragment fragment = OverviewFragment.newInstance(cityList.get(currentPos));
+            fragment.setPresent(weatherPresenter);
+            ActivityUtils.replaceFragment(
+                    getSupportFragmentManager(),
+                    fragment,
+                    R.id.fl_weather_container);
+        } else if (id == R.id.nav_daily) {
+            DailyFragment fragment = DailyFragment.newInstance(cityList.get(currentPos));
+            fragment.setPresent(weatherPresenter);
+            ActivityUtils.replaceFragment(
+                    getSupportFragmentManager(),
+                    fragment,
+                    R.id.fl_weather_container);
+        } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.nav_about) {
+
         }
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location lo = locationManager.getLastKnownLocation(provider);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
-        if (lo != null) {
-            Log.d(TAG, "Location is not null!");
-            showLocation(lo);
-        }
-        locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
+    @Override
+    public void onDetail(String cityId, String date) {
+
+    }
+
+    @Override
+    public void onSetTitle(String title, int type) {
+        toolbar.setTitle(title);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) toolbar.getLayoutParams();
+//        if (type == 0) {
+//            params.height = (int) Utils.convertDpToPixel(56, this);
+//        }
+//        if (type == 1) {
+//            params.height = (int) Utils.convertDpToPixel(128, this);
+//            params.topMargin = (int)Utils.convertDpToPixel(56, this);
+//        }
+//        toolbar.setLayoutParams(params);
+    }
+
+    @Override
+    public void onSaveWeather(int id, Weather weather) {
+        weatherHashMap.put(id, weather);
+    }
+
+    @Override
+    public Weather onGetWeather(int id) {
+        if (weatherHashMap.containsKey(id))
+            return weatherHashMap.get(id);
+        return null;
+    }
+
+    @Override
+    public void onCityChange(int pos) {
+        Log.d(TAG, "onCityChange " + pos);
+        currentPos = pos;
+        OverviewFragment fragment = OverviewFragment.newInstance(cityList.get(currentPos));
+        weatherPresenter.reset();
+        fragment.setPresent(weatherPresenter);
+        ActivityUtils.replaceFragment(
+                getSupportFragmentManager(),
+                fragment,
+                R.id.fl_weather_container);
+        MenuItem item = navigationView.getMenu().getItem(0);
+        item.setChecked(true);
+    }
+
+    /**
+     * Setup DrawerLayout and NavigationView
+     */
+    private void setupNavigation() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        setupNavigationHeader();
+    }
+
+    /**
+     * Setup Navigation header view
+     */
+    private void setupNavigationHeader() {
+        // Bind Header View
+        View headView = navigationView.getHeaderView(0);
+        headerViewPager = ButterKnife.findById(headView, R.id.vp_header);
+        headerViewPager.setAdapter(new HeaderPagerAdapter(this, cityList));
+        headerViewPager.addOnPageChangeListener(new OnHeaderPageChangeListener(this));
     }
 
 
-    LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            showLocation(location);
+    /**
+     * Load city list from SharedPreference
+     */
+    private void loadCityList() {
+        cityList = CitySharedPreference.getManagedCityList(this);
+        if (cityList == null) {
+            City beijing = new City();
+            /*
+            {
+              "lat": 39.907501,
+              "country": "CN",
+              "_id": 1816670,
+              "lon": 116.397232,
+              "name": "Beijing"
+            }
+            */
+            beijing.setName("Beijing");
+            beijing.set_id(1816670);
+            beijing.setCountry("CN");
+            beijing.setLat(39.907501);
+            beijing.setLon(116.397232);
+            CitySharedPreference.addManagedCity(this, beijing);
+            cityList = new ArrayList<>();
+            cityList.add(beijing);
         }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
-
-    private void showLocation(Location location) {
-        Log.d(TAG, "Location ---> " + location.getLatitude() + ", " + location.getLongitude());
     }
-
-
 }

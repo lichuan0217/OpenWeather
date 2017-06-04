@@ -3,6 +3,7 @@ package top.lemonsoda.openweather.domain.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
@@ -175,6 +176,11 @@ public class Utils {
         return todayMonthDay.equals(monthDay) ? context.getString(R.string.info_now) : monthDay;
     }
 
+    public static String getWeekNameString(int timestamp) {
+        Date date = new Date(timestamp * 1000l);
+        SimpleDateFormat format = new SimpleDateFormat("EE", Locale.ENGLISH);
+        return format.format(date);
+    }
 
     public static String getFormatDayString(int timestamp) {
         Date date = new Date(timestamp * 1000l);
@@ -193,6 +199,11 @@ public class Utils {
         String monthDayString = monthDayFormat.format(cal.getTime());
 
         return String.format(context.getString(formatId), today, monthDayString);
+    }
+
+    public static String formatTemperatureHighLow(Context context, double high, double low) {
+        String suffix = "\u00B0";
+        return String.format(context.getString(R.string.format_temperature_high_low), high, low);
     }
 
 
@@ -248,5 +259,19 @@ public class Utils {
                                             String desc,
                                             String temp) {
         return String.format(context.getString(R.string.share_content), city, desc, temp);
+    }
+
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    public static float convertPixelsToDp(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
     }
 }

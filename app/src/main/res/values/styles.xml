@@ -12,6 +12,10 @@
         <item name="android:windowBackground">@color/bg_light</item>
     </style>
 
+    <style name="AppTheme.Main" parent="AppTheme.Base">
+        <item name="toolbarStyle">@style/Toolbar</item>
+    </style>
+
     <style name="AppTheme.Weather">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

@@ -21,7 +21,8 @@ import top.lemonsoda.openweather.model.entry.City;
 public class CitySharedPreference {
 
     public static void saveManagedCityList(Context context, List<City> cities) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
 
         Gson gson = new Gson();
@@ -32,7 +33,8 @@ public class CitySharedPreference {
     }
 
     public static List<City> getManagedCityList(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         List<City> cityList;
 
         if (preferences.contains(Constants.PREF_MANAGE_CITY_KEY)) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cv_overview_future"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/overview_card_margin">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_overview_future"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/overview_future_recycler_margin" />
+
+</android.support.v7.widget.CardView>
