@@ -12,9 +12,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import top.lemonsoda.openweather.R;
+import top.lemonsoda.openweather.model.entry.ForecastWeather;
 
 /**
  * Created by chuanl on 7/19/16.
@@ -73,6 +78,86 @@ public class Utils {
         editor.putString(context.getString(R.string.pref_notification_choose_city_key),
                 String.valueOf(id));
         editor.commit();
+    }
+
+    private static String[] weatherConditionDescription = {"Storm", "Rainy", "Snow", "Fog", "Cloudy", "Clear"};
+
+    public static String getDescriptionForNext7Days(ForecastWeather weather, Context context) {
+        List<ForecastWeather.ListBean> listBeans = weather.getList();
+        HashMap<Integer, StringBuilder> map = new HashMap<>();
+        StringBuilder description = new StringBuilder();
+        double maxTemp = Double.MIN_VALUE;
+        double minTemp = Double.MAX_VALUE;
+        String maxDay = "Monday";
+        String minDay = "Monday";
+        for (ForecastWeather.ListBean bean : listBeans) {
+            int weatherId = bean.getWeather().get(0).getId();
+            int timestamp = bean.getDt();
+            int condition = getDescriptionForWeatherCondition(weatherId);
+            if (map.containsKey(condition)) {
+                StringBuilder time = map.get(condition);
+                time.append(", ");
+                time.append(getFullWeekNameString(timestamp));
+                map.put(condition, time);
+            } else {
+                StringBuilder time = new StringBuilder(getFullWeekNameString(timestamp));
+                map.put(condition, time);
+            }
+
+            if (bean.getTemp().getMax() > maxTemp) {
+                maxTemp = bean.getTemp().getMax();
+                maxDay = getFullWeekNameString(timestamp);
+            }
+            if (bean.getTemp().getMin() < minTemp) {
+                minTemp = bean.getTemp().getMin();
+                minDay = getFullWeekNameString(timestamp);
+            }
+        }
+
+        for (Map.Entry<Integer, StringBuilder> entry : map.entrySet()) {
+            if (entry.getKey() == 5)
+                continue;
+            StringBuilder sb = new StringBuilder();
+            sb.append(weatherConditionDescription[entry.getKey()]);
+            sb.append(" on ");
+            sb.append(entry.getValue());
+            sb.append(". ");
+            description.append(sb.toString());
+        }
+
+        String max_min_tem = String.format(
+                context.getString(R.string.daily_format_max_min_temperature),
+                maxTemp, maxDay, minTemp, minDay);
+        description.append(max_min_tem);
+
+        return description.toString();
+    }
+
+    public static int getDescriptionForWeatherCondition(int weatherId) {
+        if (weatherId >= 200 && weatherId <= 232) {
+            return 0;
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return 1;
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return 1;
+        } else if (weatherId == 511) {
+            return 2;
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return 1;
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return 2;
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return 3;
+        } else if (weatherId == 761 || weatherId == 781) {
+            return 0;
+        } else if (weatherId == 800) {
+            return 5;
+        } else if (weatherId == 801) {
+            return 4;
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return 4;
+        }
+        return -1;
     }
 
     public static int getArtResourceForWeatherCondition(int weatherId) {
@@ -182,6 +267,12 @@ public class Utils {
         return format.format(date);
     }
 
+    public static String getFullWeekNameString(int timestamp) {
+        Date date = new Date(timestamp * 1000l);
+        SimpleDateFormat format = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+        return format.format(date);
+    }
+
     public static String getFormatDayString(int timestamp) {
         Date date = new Date(timestamp * 1000l);
         SimpleDateFormat format = new SimpleDateFormat("MMMM dd", Locale.ENGLISH);
@@ -237,6 +328,11 @@ public class Utils {
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
 
+    public static String getFormattedWindContent(Context context, float windSpeed, float degrees) {
+        String wind = getFormattedWind(context, windSpeed, degrees);
+        return "Wind: " + wind;
+    }
+
 
     public static int getScreenWidth(Activity activity) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -261,17 +357,17 @@ public class Utils {
         return String.format(context.getString(R.string.share_content), city, desc, temp);
     }
 
-    public static float convertDpToPixel(float dp, Context context){
+    public static float convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        float px = dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
     }
 
-    public static float convertPixelsToDp(float px, Context context){
+    public static float convertPixelsToDp(float px, Context context) {
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        float dp = px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return dp;
     }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_daily_city_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:paddingBottom="@dimen/daily_text_margin_top"
+        android:paddingLeft="@dimen/daily_text_margin_left"
+        android:paddingRight="@dimen/daily_text_margin_left"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/daily_text"
+        tools:text="Beijing" />
+
+    <TextView
+        android:id="@+id/tv_daily_weather_describe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:paddingBottom="@dimen/daily_text_margin_top"
+        android:paddingLeft="@dimen/daily_text_margin_left"
+        android:paddingRight="@dimen/daily_text_margin_left"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/daily_text_second"
+        tools:text="For extended app bars, the height is equal to the default height plus content increment(s)." />
+
+</LinearLayout>

@@ -32,7 +32,8 @@ import top.lemonsoda.openweather.presenter.WeatherPresenterInterface;
 import top.lemonsoda.openweather.view.WeatherViewInterface;
 import top.lemonsoda.openweather.view.ui.helper.OnContainerInteractionListener;
 
-public class OverviewFragment extends Fragment implements WeatherViewInterface, SwipeRefreshLayout.OnRefreshListener {
+public class OverviewFragment extends Fragment implements WeatherViewInterface,
+        SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = OverviewFragment.class.getCanonicalName();
     private static final String ARG_CITY_ID = "city_id";
 
@@ -117,7 +118,6 @@ public class OverviewFragment extends Fragment implements WeatherViewInterface, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
         ButterKnife.bind(this, view);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -140,7 +140,7 @@ public class OverviewFragment extends Fragment implements WeatherViewInterface, 
     @Override
     public void onResume() {
         super.onResume();
-        listener.onSetTitle("Overview", 0);
+        listener.onSetTitle(getString(R.string.title_overview));
         if (weather != null) {
             showWeather(weather);
         }
@@ -179,6 +179,7 @@ public class OverviewFragment extends Fragment implements WeatherViewInterface, 
 
     @Override
     public void showLoading() {
+//        listener.onShowLoading();
         swipeRefreshLayout.setRefreshing(false);
         swipeRefreshLayout.setVisibility(View.GONE);
         pbLoading.setVisibility(View.VISIBLE);
@@ -187,6 +188,7 @@ public class OverviewFragment extends Fragment implements WeatherViewInterface, 
     @Override
     public void hideLoading() {
         Log.d(TAG, "hide loading...");
+//        listener.onHideLoading();
         swipeRefreshLayout.setRefreshing(false);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
         llWeatherOverViewContent.setVisibility(View.VISIBLE);
@@ -196,6 +198,7 @@ public class OverviewFragment extends Fragment implements WeatherViewInterface, 
 
     @Override
     public void showError() {
+//        listener.onShowError();
         swipeRefreshLayout.setRefreshing(false);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
         llWeatherOverViewContent.setVisibility(View.GONE);
@@ -220,21 +223,22 @@ public class OverviewFragment extends Fragment implements WeatherViewInterface, 
 
     private void showWeather(Weather weather) {
         CurrentWeather currentWeather = weather.getCurrentWeather();
-        renderCurrent(currentWeather);
+        renderCurrent(weather);
         renderCurrentDetail(currentWeather);
         futureAdapter.notifyDataSetChanged();
         startAnimation();
     }
 
-    private void renderCurrent(CurrentWeather currentWeather) {
-//        tvCurrentDate.setText(Utils.getFriendlyCurrentDayString(getActivity()));
+    private void renderCurrent(Weather weather) {
+        CurrentWeather currentWeather = weather.getCurrentWeather();
+        ForecastWeather forecastWeather = weather.getForecastWeather();
         tvCurrentDate.setText(city.getName() + ", " + city.getCountry());
         tvCurrentForecast.setText(currentWeather.getWeather().get(0).getMain());
         tvCurrentNow.setText(Utils.formatTemperature(getActivity(), currentWeather.getMain().getTemp()));
         tvCurrentHighLow.setText(Utils.formatTemperatureHighLow(
                 getActivity(),
-                currentWeather.getMain().getTemp_max(),
-                currentWeather.getMain().getTemp_min()));
+                forecastWeather.getList().get(0).getTemp().getMax(),
+                forecastWeather.getList().get(0).getTemp().getMin()));
         imgCurrentIcon.setImageResource(Utils.getArtResourceForWeatherCondition(
                 currentWeather.getWeather().get(0).getId()));
     }

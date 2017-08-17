@@ -15,7 +15,11 @@
     </dimen>
     <dimen name="view_padding_vertical">@dimen/abc_list_item_padding_horizontal_material</dimen>
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">230dp</dimen>
+    <dimen name="nav_header_height">220dp</dimen>
+    <dimen name="nav_header_text_size">22sp</dimen>
+    <dimen name="nav_header_add_size">32dp</dimen>
+    <dimen name="nav_header_add_margin_top">32dp</dimen>
+    <dimen name="nav_header_add_margin_right">16dp</dimen>
     <dimen name="today_icon">96dp</dimen>
 
     <dimen name="toolbar_height_normal">56dp</dimen>
@@ -34,5 +38,9 @@
     <dimen name="overview_power_margin">16dp</dimen>
     <dimen name="overview_img_error_size">48dp</dimen>
 
+    <dimen name="daily_text">22sp</dimen>
+    <dimen name="daily_text_second">14sp</dimen>
+    <dimen name="daily_text_margin_top">8dp</dimen>
+    <dimen name="daily_text_margin_left">16dp</dimen>
 
 </resources>

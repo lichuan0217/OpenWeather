@@ -8,11 +8,12 @@ import top.lemonsoda.openweather.model.entry.Weather;
 
 public interface OnContainerInteractionListener {
 
-    public void onDetail(String cityId, String date);
+    void onDetail(String cityId, String date);
 
-    public void onSetTitle(String title, int type);
+    void onSetTitle(String title);
 
-    public void onSaveWeather(int id, Weather weather);
+    void onSaveWeather(int id, Weather weather);
 
-    public Weather onGetWeather(int id);
+    Weather onGetWeather(int id);
+
 }

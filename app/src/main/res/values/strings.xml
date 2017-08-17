@@ -14,6 +14,11 @@
     <string name="format_last_update">Last update: <xliff:g id="date">%1$s</xliff:g></string>
     <string name="format_last_update_just_now">Last update: just now</string>
     <string name="format_last_update_in_half">Last update: <xliff:g id="date">%1$d</xliff:g> min ago</string>
+
+    <string name="daily_format_max_min_temperature">
+        With maximum temperature <xliff:g id="max_temp">%1$1.0f</xliff:g>\u00B0 on <xliff:g id="max_day">%2$s</xliff:g>, and minimum temperature <xliff:g id="mix_temp">%3$1.0f</xliff:g>\u00B0 on <xliff:g id="min_day">%4$s</xliff:g>.
+    </string>
+
     <string name="title_activity_settings">Settings</string>
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
@@ -70,5 +75,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="format_temperature_high_low"><xliff:g id="high">%1.0f</xliff:g>\u00B0/<xliff:g id="low">%1.0f</xliff:g>\u00B0</string>
     <string name="overview_powered_by">Powered by OpenWeatherMap</string>
+
+    <string name="title_overview">Overview</string>
+    <string name="title_daily_forecast">Daily Forecast</string>
 
 </resources>

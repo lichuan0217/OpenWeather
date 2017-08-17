@@ -1,10 +1,13 @@
 package top.lemonsoda.openweather.view.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,7 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +41,7 @@ import top.lemonsoda.openweather.model.impl.WeatherModel;
 import top.lemonsoda.openweather.presenter.WeatherPresenterInterface;
 import top.lemonsoda.openweather.presenter.impl.WeatherPresenter;
 import top.lemonsoda.openweather.view.ui.custom.HeaderViewPager;
+import top.lemonsoda.openweather.view.ui.fragment.BaseWeatherFragment;
 import top.lemonsoda.openweather.view.ui.fragment.DailyFragment;
 import top.lemonsoda.openweather.view.ui.fragment.OverviewFragment;
 import top.lemonsoda.openweather.view.ui.helper.HeaderPagerAdapter;
@@ -55,6 +63,7 @@ public class MainActivity extends BaseActivity implements
     NavigationView navigationView;
 
     HeaderViewPager headerViewPager;
+    ImageView imgAddCity;
 
     private List<City> cityList;
     private HashMap<Integer, Weather> weatherHashMap;
@@ -136,17 +145,8 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void onSetTitle(String title, int type) {
+    public void onSetTitle(String title) {
         toolbar.setTitle(title);
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) toolbar.getLayoutParams();
-//        if (type == 0) {
-//            params.height = (int) Utils.convertDpToPixel(56, this);
-//        }
-//        if (type == 1) {
-//            params.height = (int) Utils.convertDpToPixel(128, this);
-//            params.topMargin = (int)Utils.convertDpToPixel(56, this);
-//        }
-//        toolbar.setLayoutParams(params);
     }
 
     @Override
@@ -160,6 +160,7 @@ public class MainActivity extends BaseActivity implements
             return weatherHashMap.get(id);
         return null;
     }
+
 
     @Override
     public void onCityChange(int pos) {
@@ -197,6 +198,14 @@ public class MainActivity extends BaseActivity implements
         headerViewPager = ButterKnife.findById(headView, R.id.vp_header);
         headerViewPager.setAdapter(new HeaderPagerAdapter(this, cityList));
         headerViewPager.addOnPageChangeListener(new OnHeaderPageChangeListener(this));
+        imgAddCity = ButterKnife.findById(headView, R.id.img_header_add_city);
+        imgAddCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LocationManageActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -226,4 +235,6 @@ public class MainActivity extends BaseActivity implements
             cityList.add(beijing);
         }
     }
+
+
 }

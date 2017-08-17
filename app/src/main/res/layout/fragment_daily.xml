@@ -1,19 +1,39 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="top.lemonsoda.openweather.view.ui.fragment.DailyFragment">
 
-    <FrameLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_weather_daily"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/colorPrimary"></FrameLayout>
+        android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/tv_daily"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Daily Forecasts" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_weather_daily"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/img_network_failed"
+            android:layout_width="@dimen/overview_img_error_size"
+            android:layout_height="@dimen/overview_img_error_size"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_network_fail"
+            android:visibility="gone" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
 
 </FrameLayout>
+

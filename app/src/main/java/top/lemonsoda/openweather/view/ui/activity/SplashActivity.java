@@ -1,6 +1,7 @@
 package top.lemonsoda.openweather.view.ui.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -85,6 +86,11 @@ public class SplashActivity extends AppCompatActivity {
         Intent intent = new Intent(SplashActivity.this, WeatherActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void goTo(Class<? extends Activity> clazz){
+        Intent intent = new Intent(SplashActivity.this, clazz);
+
     }
 
     @Override

@@ -42,7 +42,7 @@
             android:fontFamily="sans-serif-light"
             android:gravity="center_horizontal"
             android:textColor="@color/primary_text"
-            android:textSize="68sp"
+            android:textSize="60sp"
             app:layout_columnWeight="1"
             app:layout_gravity="fill_horizontal"
             tools:text="19" />
@@ -64,7 +64,7 @@
             android:fontFamily="sans-serif-light"
             android:gravity="center_horizontal"
             android:textColor="@color/secondary_text"
-            android:textSize="30sp"
+            android:textSize="24sp"
             app:layout_columnWeight="1"
             tools:text="10" />
 
